@@ -1,8 +1,24 @@
 import CursorEye from "./CursorEye";
+import SideRays from "./SideRays";
 
 export default function Hero() {
   return (
     <section className="relative w-full h-screen flex flex-col justify-center px-6 md:px-12 bg-[radial-gradient(ellipse_at_center,_var(--color-surface)_0%,_var(--color-background)_100%)] overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <SideRays
+          speed={2.5}
+          rayColor1="#4A9BAB"
+          rayColor2="#2D4A53"
+          intensity={2}
+          spread={2}
+          origin="top-right"
+          tilt={0}
+          saturation={1.5}
+          blend={0.75}
+          falloff={1.6}
+          opacity={1.0}
+        />
+      </div>
       <CursorEye />
       
       <div className="relative z-10 max-w-4xl pt-20">
