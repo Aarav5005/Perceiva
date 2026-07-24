@@ -8,7 +8,6 @@ export default function LoadingScreen() {
   const [visible, setVisible] = useState(true);
   const [fading, setFading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [bgDark, setBgDark] = useState(true);
 
   useEffect(() => {
     // Hide body overflow to prevent seeing main page content during loading
@@ -20,8 +19,6 @@ export default function LoadingScreen() {
   }, []);
 
   const handleAnimationComplete = () => {
-    // Fade background to normal color while counter runs
-    setBgDark(false);
     
     // After words animate, counter goes 0 -> 100
     const counterObj = { value: 0 };
@@ -49,7 +46,7 @@ export default function LoadingScreen() {
 
   return (
     <div 
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center transition-all duration-[800ms] ease-in-out ${bgDark ? 'bg-black' : 'bg-background'} ${fading ? 'opacity-0' : 'opacity-100'}`}
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center transition-opacity duration-[800ms] ease-in-out bg-black ${fading ? 'opacity-0' : 'opacity-100'}`}
     >
       <div className="flex flex-col items-center gap-6">
         <BlurText
