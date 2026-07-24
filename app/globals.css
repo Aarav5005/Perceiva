@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 :root {
-  --color-background: #0D1F23;
+  --color-background: #000000;
   --color-surface: #132E35;
   --color-midtone: #2D4A53;
   --color-muted: #69818D;
