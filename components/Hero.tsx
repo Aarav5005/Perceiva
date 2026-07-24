@@ -6,7 +6,7 @@ export default function Hero() {
       <CursorEye />
       
       <div className="relative z-10 max-w-4xl pt-20">
-        <h1 className="font-display font-bold text-5xl md:text-7xl lg:text-8xl text-pureWhite leading-tight mb-8">
+        <h1 className="font-display font-bold text-5xl md:text-6xl text-pureWhite leading-tight mb-8">
           What if your classroom could think?
         </h1>
         

@@ -1,26 +1,30 @@
+"use client";
+
+import BorderGlow from "./BorderGlow";
+
 export default function PersonaCards() {
   const personas = [
     {
       role: "PRINCIPAL",
-      icon: "🏫",
+      abbr: "PR",
       pain: "You manage outcomes but can't see inside classrooms.",
       benefit: "Term-long engagement data across every class, every teacher."
     },
     {
       role: "TEACHER",
-      icon: "👩‍🏫",
+      abbr: "TE",
       pain: "You can't watch 30 students and teach at the same time.",
       benefit: "Know who's lost before they give up. While class is happening."
     },
     {
       role: "PARENT",
-      icon: "👨‍👩‍👧",
+      abbr: "PA",
       pain: "You only hear about problems after the test.",
       benefit: "Understand your child's classroom reality, not just their marks."
     },
     {
       role: "STUDENT",
-      icon: "🧑‍🎒",
+      abbr: "ST",
       pain: "You struggle but no one notices until it's too late.",
       benefit: "Be seen. Not just graded."
     }
@@ -33,25 +37,40 @@ export default function PersonaCards() {
           <div 
             key={p.role}
             data-role={p.role.toLowerCase()}
-            className="bg-surface p-8 rounded-2xl border border-midtone hover:border-accent/50 transition-colors cursor-pointer"
+            className="rounded-2xl transition-transform hover:-translate-y-1 cursor-pointer"
           >
-            <div className="flex items-center gap-4 mb-6">
-              <span className="text-3xl">{p.icon}</span>
-              <h3 className="font-display font-bold text-xl text-pureWhite tracking-wide">
-                {p.role}
-              </h3>
-            </div>
-            
-            <div className="space-y-4">
-              <p className="font-body text-textPrimary/60">
-                <span className="text-textPrimary/40 block mb-1 text-sm uppercase tracking-wider">Pain</span>
-                {p.pain}
-              </p>
-              <p className="font-body text-accent">
-                <span className="text-accent/50 block mb-1 text-sm uppercase tracking-wider">Benefit</span>
-                {p.benefit}
-              </p>
-            </div>
+            <BorderGlow
+              glowColor="185 35 53"
+              backgroundColor="#132E35"
+              borderRadius={16}
+              glowRadius={30}
+              glowIntensity={0.8}
+              animated={false}
+              colors={['#4A9BAB', '#2D4A53', '#69818D']}
+              className="h-full"
+            >
+              <div className="flex flex-col h-full w-full relative z-10 p-8">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-10 h-10 rounded-full bg-surface border border-midtone flex items-center justify-center shrink-0">
+                    <span className="font-mono text-accent text-sm font-bold tracking-wider">{p.abbr}</span>
+                  </div>
+                  <h3 className="font-display font-bold text-xl text-pureWhite tracking-wide">
+                    {p.role}
+                  </h3>
+                </div>
+                
+                <div className="space-y-4">
+                  <p className="font-body text-textPrimary/60">
+                    <span className="text-textPrimary/40 block mb-1 text-sm uppercase tracking-wider">Pain</span>
+                    {p.pain}
+                  </p>
+                  <p className="font-body text-accent">
+                    <span className="text-accent/50 block mb-1 text-sm uppercase tracking-wider">Benefit</span>
+                    {p.benefit}
+                  </p>
+                </div>
+              </div>
+            </BorderGlow>
           </div>
         ))}
       </div>

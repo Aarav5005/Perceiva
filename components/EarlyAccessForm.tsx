@@ -1,21 +1,66 @@
+"use client";
+
+import { useState } from "react";
+import CurvedInput from "./CurvedInput";
+
 export default function EarlyAccessForm() {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    role: "",
+    school: "",
+    city: "",
+    board: "",
+    challenge: "",
+    email: ""
+  });
+
+  const nextStep = () => setStep((s) => Math.min(s + 1, 5));
+  
+  const handleRoleSelect = (role: string) => {
+    setFormData({ ...formData, role });
+    setTimeout(nextStep, 300); // slight delay for visual feedback
+  };
+
+  const handleBoardSelect = (board: string) => {
+    setFormData({ ...formData, board });
+    setTimeout(nextStep, 300);
+  };
+
+  const handleSubmit = (email: string) => {
+    setFormData({ ...formData, email });
+    // In a real app, this would submit the form data to the backend
+    console.log("Submitted:", { ...formData, email });
+    alert("Thank you! We've received your information.");
+  };
+
+  // Calculate progress (0 to 100)
+  const progress = ((step - 1) / 4) * 100;
+
   return (
-    <section className="w-full bg-background py-24 px-6 md:px-12 flex justify-center">
-      <div className="max-w-2xl w-full bg-surface rounded-2xl border border-midtone overflow-hidden">
+    <section className="w-full bg-background py-24 px-6 md:px-12 flex justify-center overflow-hidden">
+      <div className="max-w-2xl w-full bg-surface rounded-2xl border border-midtone overflow-hidden relative min-h-[400px] flex flex-col">
         
-        {/* Progress Bar (Static) */}
-        <div className="w-full h-1 bg-background">
-          <div className="h-full bg-accent w-[0%]"></div>
+        {/* Progress Bar */}
+        <div className="w-full h-1 bg-background relative z-10">
+          <div 
+            className="h-full bg-accent transition-all duration-500 ease-out" 
+            style={{ width: `${progress}%` }}
+          ></div>
         </div>
 
-        <div className="p-8 md:p-12 space-y-16">
+        <div className="p-8 md:p-12 flex-1 relative flex items-center justify-center">
           
           {/* Q1 */}
-          <div className="space-y-6">
-            <h3 className="font-display text-xl md:text-2xl text-pureWhite">Who are you?</h3>
+          <div className={`w-full transition-all duration-500 ease-in-out absolute px-8 md:px-12 left-0 ${step === 1 ? 'opacity-100 translate-y-0 pointer-events-auto z-10' : step > 1 ? 'opacity-0 -translate-y-8 pointer-events-none' : 'opacity-0 translate-y-8 pointer-events-none'}`}>
+            <h3 className="font-display text-xl md:text-2xl text-pureWhite mb-6 text-center md:text-left">Who are you?</h3>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {['Principal', 'Teacher', 'Parent', 'Student'].map((role) => (
-                <button key={role} className="w-full py-4 px-4 bg-background border border-background hover:border-accent/50 rounded-lg text-textPrimary font-body transition-colors text-center">
+                <button 
+                  key={role} 
+                  onClick={() => handleRoleSelect(role)}
+                  className={`w-full py-4 px-4 border rounded-lg text-textPrimary font-body transition-colors text-center
+                    ${formData.role === role ? 'bg-accent/10 border-accent' : 'bg-background border-background hover:border-accent/50'}`}
+                >
                   {role}
                 </button>
               ))}
@@ -23,20 +68,42 @@ export default function EarlyAccessForm() {
           </div>
 
           {/* Q2 */}
-          <div className="space-y-6">
-            <h3 className="font-display text-xl md:text-2xl text-pureWhite">Which school are you from?</h3>
-            <div className="space-y-4">
-              <input type="text" placeholder="School name" className="w-full bg-background border border-background focus:border-accent/50 rounded-lg px-4 py-4 text-textPrimary font-body outline-none" />
-              <input type="text" placeholder="City" className="w-full bg-background border border-background focus:border-accent/50 rounded-lg px-4 py-4 text-textPrimary font-body outline-none" />
+          <div className={`w-full transition-all duration-500 ease-in-out absolute px-8 md:px-12 left-0 ${step === 2 ? 'opacity-100 translate-y-0 pointer-events-auto z-10' : step > 2 ? 'opacity-0 -translate-y-8 pointer-events-none' : 'opacity-0 translate-y-8 pointer-events-none'}`}>
+            <h3 className="font-display text-xl md:text-2xl text-pureWhite mb-6 text-center md:text-left">Which school are you from?</h3>
+            <div className="space-y-4 mb-6">
+              <input 
+                type="text" 
+                placeholder="School name" 
+                value={formData.school}
+                onChange={(e) => setFormData({...formData, school: e.target.value})}
+                className="w-full bg-background border border-background focus:border-accent/50 rounded-lg px-4 py-4 text-textPrimary font-body outline-none" 
+              />
+              <input 
+                type="text" 
+                placeholder="City" 
+                value={formData.city}
+                onChange={(e) => setFormData({...formData, city: e.target.value})}
+                className="w-full bg-background border border-background focus:border-accent/50 rounded-lg px-4 py-4 text-textPrimary font-body outline-none" 
+              />
+            </div>
+            <div className="flex justify-end">
+              <button onClick={nextStep} className="py-3 px-6 bg-accent text-background font-bold rounded-lg hover:bg-accent/90 transition-colors">
+                Continue →
+              </button>
             </div>
           </div>
 
           {/* Q3 */}
-          <div className="space-y-6">
-            <h3 className="font-display text-xl md:text-2xl text-pureWhite">What board does your school follow?</h3>
+          <div className={`w-full transition-all duration-500 ease-in-out absolute px-8 md:px-12 left-0 ${step === 3 ? 'opacity-100 translate-y-0 pointer-events-auto z-10' : step > 3 ? 'opacity-0 -translate-y-8 pointer-events-none' : 'opacity-0 translate-y-8 pointer-events-none'}`}>
+            <h3 className="font-display text-xl md:text-2xl text-pureWhite mb-6 text-center md:text-left">What board does your school follow?</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {['IB', 'ICSE', 'CBSE', 'Other'].map((board) => (
-                <button key={board} className="w-full py-4 px-4 bg-background border border-background hover:border-accent/50 rounded-lg text-textPrimary font-body transition-colors text-center">
+                <button 
+                  key={board} 
+                  onClick={() => handleBoardSelect(board)}
+                  className={`w-full py-4 px-4 border rounded-lg text-textPrimary font-body transition-colors text-center
+                    ${formData.board === board ? 'bg-accent/10 border-accent' : 'bg-background border-background hover:border-accent/50'}`}
+                >
                   {board}
                 </button>
               ))}
@@ -44,21 +111,38 @@ export default function EarlyAccessForm() {
           </div>
 
           {/* Q4 */}
-          <div className="space-y-6">
-            <h3 className="font-display text-xl md:text-2xl text-pureWhite">What&apos;s your biggest classroom challenge right now?</h3>
-            <textarea rows={4} placeholder="Optional" className="w-full bg-background border border-background focus:border-accent/50 rounded-lg px-4 py-4 text-textPrimary font-body outline-none resize-none"></textarea>
-            <button className="text-textPrimary/50 text-sm hover:text-textPrimary underline">Skip this question</button>
+          <div className={`w-full transition-all duration-500 ease-in-out absolute px-8 md:px-12 left-0 ${step === 4 ? 'opacity-100 translate-y-0 pointer-events-auto z-10' : step > 4 ? 'opacity-0 -translate-y-8 pointer-events-none' : 'opacity-0 translate-y-8 pointer-events-none'}`}>
+            <h3 className="font-display text-xl md:text-2xl text-pureWhite mb-6 text-center md:text-left">What&apos;s your biggest classroom challenge right now?</h3>
+            <textarea 
+              rows={4} 
+              placeholder="Optional" 
+              value={formData.challenge}
+              onChange={(e) => setFormData({...formData, challenge: e.target.value})}
+              className="w-full bg-background border border-background focus:border-accent/50 rounded-lg px-4 py-4 text-textPrimary font-body outline-none resize-none mb-6"
+            ></textarea>
+            <div className="flex justify-between items-center">
+              <button onClick={nextStep} className="text-textPrimary/50 text-sm hover:text-textPrimary underline">Skip this question</button>
+              <button onClick={nextStep} className="py-3 px-6 bg-accent text-background font-bold rounded-lg hover:bg-accent/90 transition-colors">
+                Continue →
+              </button>
+            </div>
           </div>
 
           {/* Q5 */}
-          <div className="space-y-6">
-            <h3 className="font-display text-xl md:text-2xl text-pureWhite">Last one — your email, so we can reach you.</h3>
-            <div className="flex flex-col md:flex-row gap-4">
-              <input type="email" placeholder="Email address" className="flex-1 bg-background border border-background focus:border-accent/50 rounded-lg px-4 py-4 text-textPrimary font-body outline-none" />
-              <button className="py-4 px-8 bg-accent text-background font-bold rounded-lg hover:bg-accent/90 transition-colors shrink-0">
-                I&apos;m in →
-              </button>
-            </div>
+          <div className={`w-full transition-all duration-500 ease-in-out absolute px-8 md:px-12 left-0 ${step === 5 ? 'opacity-100 translate-y-0 pointer-events-auto z-10' : 'opacity-0 translate-y-8 pointer-events-none'}`}>
+            <h3 className="font-display text-xl md:text-2xl text-pureWhite mb-6 text-center md:text-left">Last one — your email, so we can reach you.</h3>
+            <CurvedInput
+              placeholder="your@email.com"
+              buttonText="I'm in"
+              theme="dark"
+              bend={20}
+              height={60}
+              backgroundColor="#132E35"
+              borderColor="#2D4A53"
+              buttonColor="#4A9BAB"
+              buttonTextColor="#000000"
+              onSubmit={(email: string) => handleSubmit(email)}
+            />
           </div>
 
         </div>
