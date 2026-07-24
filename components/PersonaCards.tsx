@@ -30,6 +30,17 @@ export default function PersonaCards() {
     }
   ];
 
+  const handleCardClick = (role: string) => {
+    // Capitalize first letter to match form format
+    const formattedRole = role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
+    window.dispatchEvent(new CustomEvent('select-role', { detail: { role: formattedRole } }));
+    
+    const formElement = document.getElementById('early-access-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="w-full bg-background py-24 px-6 md:px-12">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -37,6 +48,7 @@ export default function PersonaCards() {
           <div 
             key={p.role}
             data-role={p.role.toLowerCase()}
+            onClick={() => handleCardClick(p.role)}
             className="rounded-2xl transition-transform hover:-translate-y-1 cursor-pointer"
           >
             <BorderGlow

@@ -1,8 +1,8 @@
 # Context
 
-Phase: 2 complete, Phase 3 not started
+Phase: 3 (Interactive Components & Fixes) complete. Ready for Phase 4 (Animations/Wiring)
 Assets: logo NO, video NO, formspree endpoint NO
-All components: static layout completed
+All components: static layout and React Bits integrations completed
 
 Decisions made:
 - Created empty shells for components.
@@ -15,3 +15,5 @@ Decisions made:
 - Applied mobile-first styling with desktop responsive prefixes (`md:`, `lg:`).
 - Used exact copy from README.md without placeholder text.
 - Ensured color variables refer strictly to Tailwind config.
+- Refactored Form into a multi-step dynamic flow.
+- Integrated React Bits components: SpecularButton, BorderGlow, CurvedInput, SideRays.

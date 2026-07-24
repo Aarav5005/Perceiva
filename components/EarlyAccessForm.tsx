@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CurvedInput from "./CurvedInput";
+import { submitToFormspree } from "../lib/formspree";
 
 export default function EarlyAccessForm() {
   const [step, setStep] = useState(1);
@@ -13,6 +14,19 @@ export default function EarlyAccessForm() {
     challenge: "",
     email: ""
   });
+
+  useEffect(() => {
+    const handleSelectRole = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail && customEvent.detail.role) {
+        setFormData(prev => ({ ...prev, role: customEvent.detail.role }));
+        setStep(2); // Automatically advance to step 2
+      }
+    };
+    
+    window.addEventListener('select-role', handleSelectRole);
+    return () => window.removeEventListener('select-role', handleSelectRole);
+  }, []);
 
   const nextStep = () => setStep((s) => Math.min(s + 1, 5));
   
@@ -26,18 +40,23 @@ export default function EarlyAccessForm() {
     setTimeout(nextStep, 300);
   };
 
-  const handleSubmit = (email: string) => {
-    setFormData({ ...formData, email });
-    // In a real app, this would submit the form data to the backend
-    console.log("Submitted:", { ...formData, email });
-    alert("Thank you! We've received your information.");
+  const handleSubmit = async (email: string) => {
+    const finalData = { ...formData, email };
+    setFormData(finalData);
+    
+    const result = await submitToFormspree(finalData);
+    if (result.success) {
+      setStep(6);
+    } else {
+      alert(result.error || "Something went wrong.");
+    }
   };
 
   // Calculate progress (0 to 100)
   const progress = ((step - 1) / 4) * 100;
 
   return (
-    <section className="w-full bg-background py-24 px-6 md:px-12 flex justify-center overflow-hidden">
+    <section id="early-access-form" className="w-full bg-background py-24 px-6 md:px-12 flex justify-center overflow-hidden">
       <div className="max-w-2xl w-full bg-surface rounded-2xl border border-midtone overflow-hidden relative min-h-[400px] flex flex-col">
         
         {/* Progress Bar */}
@@ -129,7 +148,7 @@ export default function EarlyAccessForm() {
           </div>
 
           {/* Q5 */}
-          <div className={`w-full transition-all duration-500 ease-in-out absolute px-8 md:px-12 left-0 ${step === 5 ? 'opacity-100 translate-y-0 pointer-events-auto z-10' : 'opacity-0 translate-y-8 pointer-events-none'}`}>
+          <div className={`w-full transition-all duration-500 ease-in-out absolute px-8 md:px-12 left-0 ${step === 5 ? 'opacity-100 translate-y-0 pointer-events-auto z-10' : step > 5 ? 'opacity-0 -translate-y-8 pointer-events-none' : 'opacity-0 translate-y-8 pointer-events-none'}`}>
             <h3 className="font-display text-xl md:text-2xl text-pureWhite mb-6 text-center md:text-left">Last one — your email, so we can reach you.</h3>
             <CurvedInput
               placeholder="your@email.com"
@@ -144,6 +163,17 @@ export default function EarlyAccessForm() {
               buttonTextColor="#000000"
               onSubmit={(email: string) => handleSubmit(email)}
             />
+          </div>
+
+          {/* Success Step (Step 6) */}
+          <div className={`w-full transition-all duration-500 ease-in-out absolute px-8 md:px-12 left-0 ${step === 6 ? 'opacity-100 translate-y-0 pointer-events-auto z-10' : 'opacity-0 translate-y-8 pointer-events-none'}`}>
+            <div className="flex flex-col items-center justify-center text-center space-y-4">
+              <h3 className="font-display text-4xl md:text-5xl text-pureWhite font-bold">You&apos;re on the list.</h3>
+              <p className="font-body text-textPrimary/80 text-lg">We&apos;ll reach out personally. Not a newsletter.</p>
+              <div className="mt-8 pt-8 border-t border-midtone">
+                <span className="font-mono text-xs text-utility">Built by Aarav & Chakrashen · IIT Jodhpur</span>
+              </div>
+            </div>
           </div>
 
         </div>
