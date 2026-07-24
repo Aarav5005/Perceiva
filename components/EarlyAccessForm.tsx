@@ -135,9 +135,10 @@ export default function EarlyAccessForm() {
               placeholder="your@email.com"
               buttonText="I'm in"
               theme="dark"
-              bend={20}
-              height={60}
-              backgroundColor="#132E35"
+              bend={0}
+              height={56}
+              width="100%"
+              backgroundColor="#0D1F23"
               borderColor="#2D4A53"
               buttonColor="#4A9BAB"
               buttonTextColor="#000000"
