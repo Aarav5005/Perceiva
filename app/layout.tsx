@@ -18,6 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script defer data-domain="perceiva.in" src="https://plausible.io/js/script.js"></script>
+      </head>
       <body className={`${inter.variable} ${spaceGrotesk.variable} ${ibmPlexMono.variable} font-body bg-background text-textPrimary`}>
         {children}
       </body>
