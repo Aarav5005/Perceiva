@@ -1,11 +1,11 @@
 export default function DemoVideo() {
   return (
     <section className="w-full bg-background py-24 px-6 md:px-12 flex justify-center">
-      <div className="relative w-full max-w-5xl aspect-video bg-surface rounded-lg border border-surface flex items-center justify-center overflow-hidden">
+      <div className="relative w-full max-w-5xl aspect-video bg-surface rounded-lg border border-midtone flex items-center justify-center overflow-hidden">
         
         {/* Placeholder label */}
         <div className="absolute top-6 left-6 z-10">
-          <span className="font-mono text-teal text-sm tracking-wider">LIVE DEMO</span>
+          <span className="font-mono text-accent text-sm tracking-wider">LIVE DEMO</span>
         </div>
 
         {/* Video placeholder text */}

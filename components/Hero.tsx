@@ -15,18 +15,18 @@ export default function Hero() {
         </p>
         
         <div className="flex flex-col items-start gap-4">
-          <button className="text-base md:text-lg font-body font-medium px-8 py-4 border border-teal text-teal rounded-full hover:bg-teal/10 transition-colors">
+          <button className="text-base md:text-lg font-body font-medium px-8 py-4 border border-accent text-accent bg-transparent rounded-full hover:bg-accent/10 transition-colors">
             Join the early access list ↓
           </button>
           
-          <span className="font-mono text-xs md:text-sm text-textPrimary/50">
+          <span className="font-mono text-xs md:text-sm text-utility">
             Currently building with founding schools · IIT Jodhpur
           </span>
         </div>
       </div>
 
       <div className="absolute bottom-8 right-6 md:bottom-12 md:right-12">
-        <span className="font-mono text-xs md:text-sm text-textPrimary/50 tracking-[0.2em]">
+        <span className="font-mono text-xs md:text-sm text-utility tracking-[0.2em]">
           SCROLL
         </span>
       </div>

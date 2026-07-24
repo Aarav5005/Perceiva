@@ -14,7 +14,7 @@ export default function ProblemSection() {
         <p className="font-display font-medium text-2xl md:text-5xl lg:text-6xl text-textPrimary leading-tight">
           The quietest student is often the one who needs help most.
         </p>
-        <p className="font-display font-medium text-3xl md:text-6xl lg:text-7xl text-teal leading-tight">
+        <p className="font-display font-medium text-3xl md:text-6xl lg:text-7xl text-accent leading-tight">
           Perceiva sees what teachers can&apos;t.
         </p>
       </div>

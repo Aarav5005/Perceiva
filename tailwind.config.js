@@ -7,11 +7,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: "#0B0F1A",
-        surface: "#1C2438",
-        teal: "#5EEAD4",
-        amber: "#F5A623",
-        textPrimary: "#E8E6E1",
+        background: "#0D1F23",
+        surface: "#132E35",
+        midtone: "#2D4A53",
+        muted: "#69818D",
+        textPrimary: "#AFB3B7",
+        utility: "#5A636A",
+        accent: "#4A9BAB",
         pureWhite: "#FFFFFF",
       },
       fontFamily: {

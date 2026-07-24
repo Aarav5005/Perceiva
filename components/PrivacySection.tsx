@@ -1,7 +1,7 @@
 export default function PrivacySection() {
   return (
     <section className="w-full bg-background py-24 px-6 md:px-12 flex justify-center">
-      <div className="max-w-3xl w-full bg-surface p-8 md:p-12 rounded-xl border border-surface">
+      <div className="max-w-3xl w-full bg-surface p-8 md:p-12 rounded-xl border border-midtone">
         <h3 className="font-mono text-textPrimary text-lg md:text-xl mb-8">
           DATA HANDLING — PLAIN ENGLISH
         </h3>

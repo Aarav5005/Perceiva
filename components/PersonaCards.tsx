@@ -33,7 +33,7 @@ export default function PersonaCards() {
           <div 
             key={p.role}
             data-role={p.role.toLowerCase()}
-            className="bg-surface p-8 rounded-2xl border border-surface hover:border-teal/50 transition-colors cursor-pointer"
+            className="bg-surface p-8 rounded-2xl border border-midtone hover:border-accent/50 transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-4 mb-6">
               <span className="text-3xl">{p.icon}</span>
@@ -47,8 +47,8 @@ export default function PersonaCards() {
                 <span className="text-textPrimary/40 block mb-1 text-sm uppercase tracking-wider">Pain</span>
                 {p.pain}
               </p>
-              <p className="font-body text-teal">
-                <span className="text-teal/50 block mb-1 text-sm uppercase tracking-wider">Benefit</span>
+              <p className="font-body text-accent">
+                <span className="text-accent/50 block mb-1 text-sm uppercase tracking-wider">Benefit</span>
                 {p.benefit}
               </p>
             </div>
