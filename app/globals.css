@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-background: #0B0F1A;
+  --color-surface: #1C2438;
+  --color-teal: #5EEAD4;
+  --color-amber: #F5A623;
+  --color-text-primary: #E8E6E1;
+  --color-pure-white: #FFFFFF;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+}
