@@ -10,9 +10,9 @@ export default function Footer() {
           <Image 
             src="/logo/perceiva-logo.svg" 
             alt="Perceiva Logo" 
-            width={120} 
-            height={32} 
-            className="w-auto h-6 object-contain"
+            width={240} 
+            height={64} 
+            className="w-auto h-12 md:h-16 object-contain -ml-2"
           />
         </div>
 

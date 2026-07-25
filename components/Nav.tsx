@@ -10,9 +10,9 @@ export default function Nav() {
         <Image 
           src="/logo/perceiva-logo.svg" 
           alt="Perceiva Logo" 
-          width={150} 
-          height={40} 
-          className="w-auto h-8 md:h-10 object-contain"
+          width={300} 
+          height={80} 
+          className="w-auto h-16 md:h-20 object-contain -ml-2"
           priority
         />
       </div>
