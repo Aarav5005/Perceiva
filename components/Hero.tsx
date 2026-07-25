@@ -28,14 +28,7 @@ export default function Hero() {
         />
       </motion.div>
       
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 4.5 }}
-      >
-        <CursorEye />
-      </motion.div>
-      
+      {/* Moved CursorEye to appear below text on mobile */}
       <div className="relative z-10 max-w-4xl pt-20">
         <motion.h1 
           initial={{ opacity: 0, y: 30 }}
@@ -73,6 +66,14 @@ export default function Hero() {
           </span>
         </motion.div>
       </div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 4.5 }}
+      >
+        <CursorEye />
+      </motion.div>
 
       <motion.div 
         initial={{ opacity: 0 }}

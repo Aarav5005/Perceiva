@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export default function CursorEye() {
   const irisRef = useRef<SVGGElement>(null);
@@ -23,17 +23,14 @@ export default function CursorEye() {
       const eyeCenterX = rect.left + rect.width / 2;
       const eyeCenterY = rect.top + rect.height / 2;
 
-      // Calculate vector from eye center to mouse
       let dx = e.clientX - eyeCenterX;
       let dy = e.clientY - eyeCenterY;
 
-      // Scale down the movement so it stays within the eye
-      // Using a factor to make it feel natural before clamping
       dx = dx * 0.1;
       dy = dy * 0.1;
 
       const distance = Math.sqrt(dx * dx + dy * dy);
-      const maxDisplacement = 35;
+      const maxDisplacement = 30;
 
       if (distance > maxDisplacement) {
         targetX = (dx / distance) * maxDisplacement;
@@ -44,7 +41,6 @@ export default function CursorEye() {
       }
     };
 
-    // If mouse leaves window, reset to center and resume wandering
     const handleMouseLeave = () => {
       hasMouseMoved = false;
     };
@@ -54,13 +50,11 @@ export default function CursorEye() {
 
     const animate = () => {
       if (!hasMouseMoved) {
-        // Slow figure-8 pattern for mobile or idle state
         time += 0.02;
-        targetX = Math.sin(time) * 25; // max 25px horizontal
-        targetY = Math.sin(time * 2) * 12; // max 12px vertical
+        targetX = Math.sin(time) * 20; 
+        targetY = Math.sin(time * 2) * 10;
       }
 
-      // Lerp
       currentX += (targetX - currentX) * 0.08;
       currentY += (targetY - currentY) * 0.08;
 
@@ -83,80 +77,63 @@ export default function CursorEye() {
   return (
     <div 
       ref={containerRef} 
-      // Desktop: 60% from left, 320x180. Mobile: centered, 240x135.
-      className="absolute left-1/2 md:left-[60%] top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none w-[240px] h-[135px] md:w-[320px] md:h-[180px]"
-      style={{ filter: 'drop-shadow(0 0 20px rgba(74, 155, 171, 0.3))' }}
+      className="w-[260px] h-[120px] md:w-[380px] md:h-[175px] mx-auto md:mx-0 md:absolute md:top-1/2 md:left-[65%] md:-translate-y-1/2 z-20 pointer-events-none mt-12 md:mt-0"
+      style={{ filter: 'drop-shadow(0 0 12px rgba(74, 155, 171, 0.25))' }}
     >
       <svg 
         width="100%" 
         height="100%" 
-        viewBox="-140 -80 280 160" 
+        viewBox="-150 -70 300 140" 
         fill="none" 
         xmlns="http://www.w3.org/2000/svg"
       >
         {/* Outer eye shape */}
-        {/* Top arc curves to -55, bottom arc curves to 55 */}
+        {/* Top arc */}
         <path 
-          d="M -120 0 Q -60 -80 0 -55 Q 60 -30 120 0 Q 60 30 0 55 Q -60 80 -120 0 Z" 
-          fill="#AFB3B7" 
-          stroke="#2D4A53" 
-          strokeWidth="2"
-        />
-
-        {/* Eyelid bold stroke on the right half */}
-        <path 
-          d="M 0 -55 Q 60 -30 120 0" 
+          d="M -150 0 Q 0 -85 150 0" 
+          stroke="#AFB3B7" 
+          strokeWidth="1.5"
           fill="none"
-          stroke="#0D1F23" 
-          strokeWidth="6" 
-          strokeLinecap="round"
         />
-
-        {/* Vertical dividing line */}
-        <line x1="0" y1="-70" x2="0" y2="70" stroke="#4A9BAB" strokeWidth="1" opacity="0.2" />
+        {/* Bottom arc - thicker wedge style */}
+        <path 
+          d="M -150 0 Q 0 85 150 0" 
+          stroke="#2D4A53" 
+          strokeWidth="5"
+          fill="none"
+        />
 
         {/* Left half facial landmark mesh (static) */}
-        <g stroke="#4A9BAB" strokeWidth="0.8" opacity="0.5">
-          <line x1="-120" y1="0" x2="-80" y2="-35" />
-          <line x1="-80" y1="-35" x2="-40" y2="-45" />
-          <line x1="-40" y1="-45" x2="0" y2="-55" />
+        <g stroke="#4A9BAB" strokeWidth="0.6" opacity="0.35">
+          <line x1="-150" y1="0" x2="-95" y2="-38" />
+          <line x1="-95" y1="-38" x2="-45" y2="-62" />
           
-          <line x1="-120" y1="0" x2="-80" y2="35" />
-          <line x1="-80" y1="35" x2="-40" y2="45" />
-          <line x1="-40" y1="45" x2="0" y2="55" />
-
-          <line x1="-80" y1="-35" x2="-50" y2="-15" />
-          <line x1="-50" y1="-15" x2="-40" y2="-45" />
-
-          <line x1="-80" y1="35" x2="-50" y2="15" />
-          <line x1="-50" y1="15" x2="-40" y2="45" />
-
-          <line x1="-50" y1="-15" x2="-20" y2="-20" />
-          <line x1="-50" y1="15" x2="-20" y2="20" />
-          <line x1="-20" y1="-20" x2="-20" y2="20" />
+          <line x1="-150" y1="0" x2="-95" y2="38" />
+          <line x1="-95" y1="38" x2="-45" y2="62" />
+          
+          <line x1="-95" y1="-38" x2="-45" y2="62" />
         </g>
 
         {/* Landmark dots */}
-        <g fill="#4A9BAB">
-          <circle cx="-120" cy="0" r="2.5" />
-          <circle cx="-80" cy="-35" r="2.5" />
-          <circle cx="-40" cy="-45" r="2.5" />
-          <circle cx="0" cy="-55" r="2.5" />
-          <circle cx="-80" cy="35" r="2.5" />
-          <circle cx="-40" cy="45" r="2.5" />
-          <circle cx="0" cy="55" r="2.5" />
-          <circle cx="-50" cy="-15" r="2.5" />
-          <circle cx="-50" cy="15" r="2.5" />
-          <circle cx="-20" cy="-20" r="2.5" />
-          <circle cx="-20" cy="20" r="2.5" />
+        <g fill="#4A9BAB" opacity="0.7">
+          <circle cx="-150" cy="0" r="2" />
+          <circle cx="-95" cy="-38" r="2" />
+          <circle cx="-45" cy="-62" r="2" />
+          
+          <circle cx="-95" cy="38" r="2" />
+          <circle cx="-45" cy="62" r="2" />
         </g>
 
         {/* Iris and Pupil (Moving Group) */}
         <g ref={irisRef}>
-          {/* Iris */}
-          <circle cx="0" cy="0" r="28" fill="#4A9BAB" />
-          {/* Pupil */}
-          <circle cx="0" cy="0" r="10" fill="#0D1F23" />
+          {/* Outer ring */}
+          <circle cx="0" cy="0" r="32" stroke="#4A9BAB" strokeWidth="2" fill="none" />
+          
+          {/* Dark gap - matching the background color to look like an aperture gap */}
+          <circle cx="0" cy="0" r="28" fill="#0D1F23" />
+          
+          {/* Inner filled circle */}
+          <circle cx="0" cy="0" r="14" fill="#4A9BAB" />
         </g>
       </svg>
     </div>
