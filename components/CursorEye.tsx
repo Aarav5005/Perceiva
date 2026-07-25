@@ -1,141 +1,195 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 
-export default function CursorEye() {
-  const irisRef = useRef<SVGGElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+function EyeScene() {
+  const irisGroupRef = useRef<THREE.Group>(null);
+  const targetPos = useRef(new THREE.Vector2(0, 0));
+  const hasMouseMoved = useRef(false);
 
+  // Outer Eye Arcs
+  const topCurve = useMemo(() => new THREE.CatmullRomCurve3([
+    new THREE.Vector3(-2, 0, 0),
+    new THREE.Vector3(0, 0.8, 0),
+    new THREE.Vector3(2, 0, 0),
+  ]), []);
+  
+  const bottomCurve = useMemo(() => new THREE.CatmullRomCurve3([
+    new THREE.Vector3(-2, 0, 0),
+    new THREE.Vector3(0, -0.8, 0),
+    new THREE.Vector3(2, 0, 0),
+  ]), []);
+
+  // Event Listeners for Cursor
   useEffect(() => {
-    let animationFrameId: number;
-    let targetX = 0;
-    let targetY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let hasMouseMoved = false;
-    let time = 0;
-
     const handleMouseMove = (e: MouseEvent) => {
-      hasMouseMoved = true;
-      if (!containerRef.current) return;
+      hasMouseMoved.current = true;
+      const nx = (e.clientX / window.innerWidth) * 2 - 1;
+      const ny = -(e.clientY / window.innerHeight) * 2 + 1;
       
-      const rect = containerRef.current.getBoundingClientRect();
-      const eyeCenterX = rect.left + rect.width / 2;
-      const eyeCenterY = rect.top + rect.height / 2;
-
-      let dx = e.clientX - eyeCenterX;
-      let dy = e.clientY - eyeCenterY;
-
-      dx = dx * 0.1;
-      dy = dy * 0.1;
-
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      const maxDisplacement = 30;
-
-      if (distance > maxDisplacement) {
-        targetX = (dx / distance) * maxDisplacement;
-        targetY = (dy / distance) * maxDisplacement;
-      } else {
-        targetX = dx;
-        targetY = dy;
-      }
+      // Scale to ±0.8 X, ±0.4 Y
+      targetPos.current.set(nx * 0.8, ny * 0.4);
     };
 
     const handleMouseLeave = () => {
-      hasMouseMoved = false;
+      hasMouseMoved.current = false;
     };
 
     window.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseleave", handleMouseLeave);
-
-    const animate = () => {
-      if (!hasMouseMoved) {
-        time += 0.02;
-        targetX = Math.sin(time) * 20; 
-        targetY = Math.sin(time * 2) * 10;
-      }
-
-      currentX += (targetX - currentX) * 0.08;
-      currentY += (targetY - currentY) * 0.08;
-
-      if (irisRef.current) {
-        irisRef.current.setAttribute("transform", `translate(${currentX}, ${currentY})`);
-      }
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseleave", handleMouseLeave);
-      cancelAnimationFrame(animationFrameId);
     };
   }, []);
 
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
+    
+    if (!hasMouseMoved.current) {
+      targetPos.current.x = Math.sin(time) * 0.4;
+      targetPos.current.y = Math.sin(time * 2) * 0.2;
+    }
+
+    if (irisGroupRef.current) {
+      // Lerp Position
+      irisGroupRef.current.position.x += (targetPos.current.x - irisGroupRef.current.position.x) * 0.06;
+      irisGroupRef.current.position.y += (targetPos.current.y - irisGroupRef.current.position.y) * 0.06;
+      
+      // Pulse Z
+      irisGroupRef.current.position.z = Math.sin(time * 0.8) * 0.15;
+
+      // Rotate Iris
+      // Using modulo to prevent large number buildup, rotating 0.3 rad/sec
+      irisGroupRef.current.rotation.z -= 0.3 * state.clock.getDelta(); 
+    }
+  });
+
+  return (
+    <group>
+      <ambientLight intensity={0.3} />
+      <pointLight position={[1, 1, 2]} color="#4A9BAB" intensity={1.5} />
+
+      {/* Top Arc */}
+      <mesh>
+        <tubeGeometry args={[topCurve, 32, 0.02, 8, false]} />
+        <meshBasicMaterial color="#AFB3B7" />
+      </mesh>
+
+      {/* Bottom Arc */}
+      <mesh>
+        <tubeGeometry args={[bottomCurve, 32, 0.04, 8, false]} />
+        <meshBasicMaterial color="#2D4A53" />
+      </mesh>
+
+      {/* Iris Group */}
+      <group ref={irisGroupRef}>
+        {/* Ring */}
+        <mesh position={[0, 0, 0]}>
+          <ringGeometry args={[0.55, 0.8, 48]} />
+          <meshStandardMaterial color="#4A9BAB" emissive="#4A9BAB" emissiveIntensity={0.4} side={THREE.DoubleSide} />
+        </mesh>
+        {/* Void */}
+        <mesh position={[0, 0, -0.01]}>
+          <circleGeometry args={[0.55, 32]} />
+          <meshBasicMaterial color="#050A0E" side={THREE.DoubleSide} />
+        </mesh>
+        {/* Center Dot */}
+        <mesh position={[0, 0, 0.01]}>
+          <circleGeometry args={[0.18, 24]} />
+          <meshBasicMaterial color="#4A9BAB" side={THREE.DoubleSide} />
+        </mesh>
+      </group>
+
+      <Particles />
+    </group>
+  );
+}
+
+function Particles() {
+  const numParticles = 12;
+  const particleRefs = useRef<THREE.Mesh[]>([]);
+  const lineGeoRef = useRef<THREE.BufferGeometry>(null);
+
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
+    const speed = (Math.PI * 2) / 8; // 1 revolution per 8 seconds
+
+    const positions: number[] = [];
+
+    for (let i = 0; i < numParticles; i++) {
+      const angle = (i / numParticles) * Math.PI * 2 + (time * speed);
+      const x = Math.cos(angle) * 1.4;
+      const y = Math.sin(angle) * 0.5;
+      
+      const mesh = particleRefs.current[i];
+      if (mesh) {
+        mesh.position.set(x, y, 0);
+        
+        // Opacity mapping for particles
+        const material = mesh.material as THREE.MeshStandardMaterial;
+        if (x < 0) {
+          material.opacity = 0.3 + (Math.abs(x) / 1.4) * 0.7; // fade in on left
+          material.transparent = true;
+        } else {
+          material.opacity = 1.0;
+          material.transparent = false;
+        }
+      }
+
+      // Calculate next particle to draw line segments
+      const nextAngle = (((i + 1) % numParticles) / numParticles) * Math.PI * 2 + (time * speed);
+      const nextX = Math.cos(nextAngle) * 1.4;
+      const nextY = Math.sin(nextAngle) * 0.5;
+
+      // Only connect if BOTH particles are on the left side (x < 0)
+      if (x < 0 && nextX < 0) {
+        positions.push(x, y, 0);
+        positions.push(nextX, nextY, 0);
+      }
+    }
+    
+    // Update line geometry
+    if (lineGeoRef.current) {
+      if (positions.length > 0) {
+        lineGeoRef.current.setAttribute(
+          'position', 
+          new THREE.Float32BufferAttribute(positions, 3)
+        );
+        lineGeoRef.current.setDrawRange(0, positions.length / 3);
+      } else {
+        lineGeoRef.current.setDrawRange(0, 0);
+      }
+    }
+  });
+
+  return (
+    <group>
+      {Array.from({ length: numParticles }).map((_, i) => (
+        <mesh key={i} ref={(el) => { if (el) particleRefs.current[i] = el; }}>
+          <sphereGeometry args={[0.025, 12, 12]} />
+          <meshStandardMaterial color="#4A9BAB" emissive="#4A9BAB" emissiveIntensity={0.8} />
+        </mesh>
+      ))}
+      <lineSegments>
+        <bufferGeometry ref={lineGeoRef} />
+        <lineBasicMaterial color="#4A9BAB" opacity={0.3} transparent={true} />
+      </lineSegments>
+    </group>
+  );
+}
+
+export default function CursorEye() {
   return (
     <div 
-      ref={containerRef} 
-      className="w-[260px] h-[120px] md:w-[380px] md:h-[175px] mx-auto md:mx-0 md:absolute md:top-1/2 md:left-[65%] md:-translate-y-1/2 z-20 pointer-events-none mt-12 md:mt-0"
-      style={{ filter: 'drop-shadow(0 0 12px rgba(74, 155, 171, 0.25))' }}
+      className="w-[320px] h-[180px] md:w-[500px] md:h-[280px] mx-auto md:mx-0 md:absolute md:right-[5%] md:left-auto md:top-1/2 md:-translate-y-1/2 z-20 pointer-events-none mt-12 md:mt-0"
+      style={{ filter: 'drop-shadow(0 0 30px rgba(74, 155, 171, 0.2))' }}
     >
-      <svg 
-        width="100%" 
-        height="100%" 
-        viewBox="-150 -70 300 140" 
-        fill="none" 
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Outer eye shape */}
-        {/* Top arc */}
-        <path 
-          d="M -150 0 Q 0 -85 150 0" 
-          stroke="#AFB3B7" 
-          strokeWidth="1.5"
-          fill="none"
-        />
-        {/* Bottom arc - thicker wedge style */}
-        <path 
-          d="M -150 0 Q 0 85 150 0" 
-          stroke="#2D4A53" 
-          strokeWidth="5"
-          fill="none"
-        />
-
-        {/* Left half facial landmark mesh (static) */}
-        <g stroke="#4A9BAB" strokeWidth="0.6" opacity="0.35">
-          <line x1="-150" y1="0" x2="-95" y2="-38" />
-          <line x1="-95" y1="-38" x2="-45" y2="-62" />
-          
-          <line x1="-150" y1="0" x2="-95" y2="38" />
-          <line x1="-95" y1="38" x2="-45" y2="62" />
-          
-          <line x1="-95" y1="-38" x2="-45" y2="62" />
-        </g>
-
-        {/* Landmark dots */}
-        <g fill="#4A9BAB" opacity="0.7">
-          <circle cx="-150" cy="0" r="2" />
-          <circle cx="-95" cy="-38" r="2" />
-          <circle cx="-45" cy="-62" r="2" />
-          
-          <circle cx="-95" cy="38" r="2" />
-          <circle cx="-45" cy="62" r="2" />
-        </g>
-
-        {/* Iris and Pupil (Moving Group) */}
-        <g ref={irisRef}>
-          {/* Outer ring */}
-          <circle cx="0" cy="0" r="32" stroke="#4A9BAB" strokeWidth="2" fill="none" />
-          
-          {/* Dark gap - matching the background color to look like an aperture gap */}
-          <circle cx="0" cy="0" r="28" fill="#0D1F23" />
-          
-          {/* Inner filled circle */}
-          <circle cx="0" cy="0" r="14" fill="#4A9BAB" />
-        </g>
-      </svg>
+      <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
+        <EyeScene />
+      </Canvas>
     </div>
   );
 }
