@@ -1,8 +1,8 @@
 # Context
 
-Phase: 3 (Interactive Components & Fixes) complete. Ready for Phase 4 (Animations/Wiring)
+Phase: All code phases complete (Phase 4 Animations, Phase 5 Integrations). Waiting on assets and Formspree config.
 Assets: logo NO, video NO, formspree endpoint NO
-All components: static layout and React Bits integrations completed
+All components: static layout, React Bits integrations, animations, and form integrations completed
 
 Decisions made:
 - Created empty shells for components.
@@ -17,3 +17,9 @@ Decisions made:
 - Ensured color variables refer strictly to Tailwind config.
 - Refactored Form into a multi-step dynamic flow.
 - Integrated React Bits components: SpecularButton, BorderGlow, CurvedInput, SideRays.
+- Added GSAP ScrollTrigger animations to HorizontalScroll, ProblemSection, and DemoVideo.
+- Integrated Framer Motion for CursorEye tracking and Hero section entrances.
+- Built a custom R3F Three.js particle mesh for Panel1Sees.
+- Wired PersonaCards to EarlyAccessForm with a custom event for role pre-selection.
+- Wired EarlyAccessForm to Formspree backend (mock fallback active).
+- Added Plausible analytics to global layout.
