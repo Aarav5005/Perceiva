@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Footer() {
   return (
     <footer className="w-full bg-background border-t border-midtone pt-16 pb-8 px-6 md:px-12 flex flex-col items-center">
@@ -5,9 +7,13 @@ export default function Footer() {
         
         {/* Left */}
         <div className="flex items-center gap-3">
-          <div className="w-6 h-6 rounded-full bg-surface flex items-center justify-center">
-            <span className="text-accent font-display font-bold text-sm leading-none">P</span>
-          </div>
+          <Image 
+            src="/logo/perceiva-logo.svg" 
+            alt="Perceiva Logo" 
+            width={24} 
+            height={24} 
+            className="w-6 h-6 object-contain"
+          />
           <span className="font-display font-bold text-lg tracking-wide text-textPrimary">
             Perceiva
           </span>

@@ -3,7 +3,7 @@
 ASSETS STATUS
 
 Logo:
-  [ ] perceiva-logo.svg (full logo with wordmark)
+  [x] perceiva-logo.svg (full logo with wordmark)
   [ ] perceiva-icon.svg (eye icon only, iris as separate layer)
   [ ] perceiva-favicon.ico (32x32)
   [ ] perceiva-logo-light.svg (for light backgrounds, documents)
