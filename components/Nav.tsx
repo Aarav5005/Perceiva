@@ -6,17 +6,15 @@ import SpecularButton from "./SpecularButton";
 export default function Nav() {
   return (
     <nav className="fixed top-0 left-0 w-full z-40 bg-transparent py-6 px-6 md:px-12 flex justify-between items-center">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center">
         <Image 
           src="/logo/perceiva-logo.svg" 
           alt="Perceiva Logo" 
-          width={40} 
+          width={150} 
           height={40} 
-          className="w-10 h-10 object-contain"
+          className="w-auto h-8 md:h-10 object-contain"
+          priority
         />
-        <span className="font-display font-bold text-xl md:text-2xl tracking-wide text-textPrimary">
-          Perceiva
-        </span>
       </div>
       <SpecularButton 
         // @ts-ignore - Ignoring strict prop checking for React Bits component
