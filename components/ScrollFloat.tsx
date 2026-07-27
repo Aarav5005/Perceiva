@@ -20,6 +20,7 @@ interface ScrollFloatProps {
   scrollStart?: string;
   scrollEnd?: string;
   stagger?: number;
+  scrub?: boolean | number;
 }
 
 const ScrollFloat: React.FC<ScrollFloatProps> = ({
@@ -28,10 +29,11 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
   containerClassName = '',
   textClassName = '',
   animationDuration = 1,
-  ease = 'back.inOut(2)',
-  scrollStart = 'center bottom+=50%',
-  scrollEnd = 'bottom bottom-=40%',
-  stagger = 0.03
+  ease = 'power3.out',
+  scrollStart = 'top bottom-=10%',
+  scrollEnd = 'bottom center+=15%',
+  stagger = 0.02,
+  scrub = 1.2
 }) => {
   const containerRef = useRef<HTMLHeadingElement>(null);
 
@@ -49,7 +51,6 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
     if (!el) return;
 
     const scroller = scrollContainerRef && scrollContainerRef.current ? scrollContainerRef.current : window;
-
     const charElements = el.querySelectorAll('.char');
 
     const anim = gsap.fromTo(
@@ -57,9 +58,9 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
       {
         willChange: 'opacity, transform',
         opacity: 0,
-        yPercent: 120,
-        scaleY: 2.3,
-        scaleX: 0.7,
+        yPercent: 70,
+        scaleY: 1.35,
+        scaleX: 0.9,
         transformOrigin: '50% 0%'
       },
       {
@@ -75,7 +76,7 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
           scroller,
           start: scrollStart,
           end: scrollEnd,
-          scrub: true
+          scrub: scrub
         }
       }
     );
@@ -86,7 +87,7 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
       }
       anim.kill();
     };
-  }, [scrollContainerRef, animationDuration, ease, scrollStart, scrollEnd, stagger]);
+  }, [scrollContainerRef, animationDuration, ease, scrollStart, scrollEnd, stagger, scrub]);
 
   return (
     <h2 ref={containerRef} className={`scroll-float ${containerClassName}`}>
