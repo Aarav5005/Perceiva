@@ -51,11 +51,55 @@ function EyeScene() {
   const isBlinking = useRef(false);
   const blinkPhase = useRef(0);
 
-  // Geometries
-  const eyeShape = useMemo(() => makeEyeShape(), []);
-  const eyeShapeGeo = useMemo(() => new THREE.ShapeGeometry(eyeShape, 48), [eyeShape]);
-  const eyeEdgesGeo = useMemo(() => new THREE.EdgesGeometry(eyeShapeGeo, 1), [eyeShapeGeo]);
+  // Curves for bold 3D outline
+  const topCurve = useMemo(
+    () =>
+      new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-2.7, 0, 0),
+        new THREE.Vector3(-1.8, 0.72, 0),
+        new THREE.Vector3(0, 1.1, 0),
+        new THREE.Vector3(1.8, 0.72, 0),
+        new THREE.Vector3(2.7, 0, 0),
+      ]),
+    []
+  );
 
+  const bottomCurve = useMemo(
+    () =>
+      new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-2.7, 0, 0),
+        new THREE.Vector3(-1.8, -0.72, 0),
+        new THREE.Vector3(0, -1.1, 0),
+        new THREE.Vector3(1.8, -0.72, 0),
+        new THREE.Vector3(2.7, 0, 0),
+      ]),
+    []
+  );
+
+  // Generate stylized 3D eyelashes along the top curve
+  const eyelashes = useMemo(() => {
+    const lashes: { curve: THREE.CatmullRomCurve3 }[] = [];
+    const tValues = [0.16, 0.29, 0.42, 0.58, 0.71, 0.84];
+
+    tValues.forEach((t) => {
+      const point = topCurve.getPoint(t);
+      const tangent = topCurve.getTangent(t);
+      // Normal vector pointing outward and slightly forward
+      const normal = new THREE.Vector3(-tangent.y, tangent.x, 0.25).normalize();
+
+      const lashLength = 0.38 + Math.sin(t * Math.PI) * 0.14;
+      const tip = point.clone().add(normal.multiplyScalar(lashLength));
+      const mid = point.clone().add(normal.clone().multiplyScalar(lashLength * 0.55));
+      mid.z += 0.08;
+
+      const lashCurve = new THREE.CatmullRomCurve3([point, mid, tip]);
+      lashes.push({ curve: lashCurve });
+    });
+
+    return lashes;
+  }, [topCurve]);
+
+  // Geometries for eyelid overlays
   const topLidShape = useMemo(() => makeTopLidShape(), []);
   const topLidGeo = useMemo(() => new THREE.ShapeGeometry(topLidShape, 32), [topLidShape]);
 
@@ -146,14 +190,46 @@ function EyeScene() {
 
   return (
     <group ref={sceneGroupRef}>
-      <ambientLight intensity={0.3} />
+      <ambientLight intensity={0.4} />
       <pointLight position={[1, 1, 2]} color="#4A9BAB" intensity={3.0} />
       <pointLight position={[-1, -0.5, 1]} color="#132E35" intensity={1.0} />
 
-      {/* Eye outline */}
-      <lineSegments geometry={eyeEdgesGeo}>
-        <lineBasicMaterial color="#AFB3B7" linewidth={1.5} />
-      </lineSegments>
+      {/* Bold 3D Top Eyelid Rim */}
+      <mesh>
+        <tubeGeometry args={[topCurve, 48, 0.045, 8, false]} />
+        <meshStandardMaterial
+          color="#AFB3B7"
+          emissive="#AFB3B7"
+          emissiveIntensity={0.25}
+          roughness={0.3}
+        />
+      </mesh>
+
+      {/* Bold 3D Bottom Eyelid Rim */}
+      <mesh>
+        <tubeGeometry args={[bottomCurve, 48, 0.038, 8, false]} />
+        <meshStandardMaterial
+          color="#2D4A53"
+          emissive="#2D4A53"
+          emissiveIntensity={0.2}
+          roughness={0.4}
+        />
+      </mesh>
+
+      {/* Stylized 3D Eyelashes along the top eyelid */}
+      <group>
+        {eyelashes.map((lash, idx) => (
+          <mesh key={idx}>
+            <tubeGeometry args={[lash.curve, 12, 0.022, 6, false]} />
+            <meshStandardMaterial
+              color="#AFB3B7"
+              emissive="#4A9BAB"
+              emissiveIntensity={0.4}
+              roughness={0.2}
+            />
+          </mesh>
+        ))}
+      </group>
 
       {/* Iris Group */}
       <group ref={irisGroupRef}>
@@ -293,7 +369,7 @@ export default function CursorEye() {
     <div
       className="w-[320px] h-[180px] md:w-[580px] md:h-[360px] mx-auto md:mx-0 mt-12 md:mt-0 pointer-events-none"
       style={{
-        clipPath: 'path("M 82,180 C 82,180 228,95 290,95 C 352,95 498,180 498,180 C 498,180 352,265 290,265 C 228,265 82,180 82,180 Z")',
+        clipPath: 'path("M 70,180 C 70,180 228,45 290,45 C 352,45 510,180 510,180 C 510,180 352,315 290,315 C 228,315 70,180 70,180 Z")',
         overflow: 'hidden'
       }}
     >
