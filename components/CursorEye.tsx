@@ -1,203 +1,289 @@
-'use client';
+"use client";
 
-import { useRef, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { useEffect, useRef, useMemo } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import * as THREE from "three";
+
+// Build the almond/lens eye shape as a THREE.Shape
+function makeEyeShape(): THREE.Shape {
+  const shape = new THREE.Shape();
+  shape.moveTo(-2.7, 0);
+  shape.bezierCurveTo(-2.7, 0, -0.8, 1.1, 0, 1.1);
+  shape.bezierCurveTo(0.8, 1.1, 2.7, 0, 2.7, 0);
+  shape.bezierCurveTo(2.7, 0, 0.8, -1.1, 0, -1.1);
+  shape.bezierCurveTo(-0.8, -1.1, -2.7, 0, -2.7, 0);
+  return shape;
+}
+
+// Top eyelid shape (local origin at y = 1.1)
+function makeTopLidShape(): THREE.Shape {
+  const shape = new THREE.Shape();
+  shape.moveTo(-2.7, 0);
+  shape.bezierCurveTo(-2.7, 0, -0.8, 0, 0, 0);
+  shape.bezierCurveTo(0.8, 0, 2.7, 0, 2.7, 0);
+  shape.bezierCurveTo(2.7, 0, 0.8, -1.1, 0, -1.1);
+  shape.bezierCurveTo(-0.8, -1.1, -2.7, 0, -2.7, 0);
+  return shape;
+}
+
+// Bottom eyelid shape (local origin at y = -1.1)
+function makeBottomLidShape(): THREE.Shape {
+  const shape = new THREE.Shape();
+  shape.moveTo(-2.7, 0);
+  shape.bezierCurveTo(-2.7, 0, -0.8, 0, 0, 0);
+  shape.bezierCurveTo(0.8, 0, 2.7, 0, 2.7, 0);
+  shape.bezierCurveTo(2.7, 0, 0.8, 1.1, 0, 1.1);
+  shape.bezierCurveTo(-0.8, 1.1, -2.7, 0, -2.7, 0);
+  return shape;
+}
 
 function EyeScene() {
-  const irisRef = useRef<THREE.Group>(null);
-  const outerRingRef = useRef<THREE.Mesh>(null);
-  const mouse = useRef({ x: 0, y: 0 });
-  const current = useRef({ x: 0, y: 0 });
-  const blinkRef = useRef<THREE.Group>(null);
-  const blinkTimer = useRef(3 + Math.random() * 3);
-  const blinkState = useRef(0); // 0 = open, going to 1 = closed, back to 0
+  const sceneGroupRef = useRef<THREE.Group>(null);
+  const irisGroupRef = useRef<THREE.Group>(null);
+  const topLidRef = useRef<THREE.Mesh>(null);
+  const bottomLidRef = useRef<THREE.Mesh>(null);
 
+  const targetPos = useRef(new THREE.Vector2(0, 0));
+  const hasMouseMoved = useRef(false);
+
+  // Blink state refs
+  const blinkTimer = useRef(2000 + Math.random() * 4000);
+  const isBlinking = useRef(false);
+  const blinkPhase = useRef(0);
+
+  // Geometries
+  const eyeShape = useMemo(() => makeEyeShape(), []);
+  const eyeShapeGeo = useMemo(() => new THREE.ShapeGeometry(eyeShape, 48), [eyeShape]);
+  const eyeEdgesGeo = useMemo(() => new THREE.EdgesGeometry(eyeShapeGeo, 1), [eyeShapeGeo]);
+
+  const topLidShape = useMemo(() => makeTopLidShape(), []);
+  const topLidGeo = useMemo(() => new THREE.ShapeGeometry(topLidShape, 32), [topLidShape]);
+
+  const bottomLidShape = useMemo(() => makeBottomLidShape(), []);
+  const bottomLidGeo = useMemo(() => new THREE.ShapeGeometry(bottomLidShape, 32), [bottomLidShape]);
+
+  // Mouse move listener
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
-      mouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    const handleMouseMove = (e: MouseEvent) => {
+      hasMouseMoved.current = true;
+      const nx = (e.clientX / window.innerWidth) * 2 - 1;
+      const ny = -(e.clientY / window.innerHeight) * 2 + 1;
+      targetPos.current.set(nx * 0.8, ny * 0.4);
     };
-    window.addEventListener('mousemove', onMove);
-    return () => window.removeEventListener('mousemove', onMove);
+
+    const handleMouseLeave = () => {
+      hasMouseMoved.current = false;
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseleave", handleMouseLeave);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseleave", handleMouseLeave);
+    };
   }, []);
 
-  useFrame((_, delta) => {
-    // Smooth iris tracking
-    current.current.x += (mouse.current.x * 0.6 - current.current.x) * 0.06;
-    current.current.y += (mouse.current.y * 0.3 - current.current.y) * 0.06;
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
+    const delta = state.clock.getDelta();
 
-    if (irisRef.current) {
-      irisRef.current.position.x = current.current.x;
-      irisRef.current.position.y = current.current.y;
+    // Idle animation
+    if (!hasMouseMoved.current) {
+      targetPos.current.x = Math.sin(time) * 0.4;
+      targetPos.current.y = Math.sin(time * 2) * 0.2;
     }
 
-    // Slow outer ring rotation
-    if (outerRingRef.current) {
-      outerRingRef.current.rotation.z += delta * 0.15;
+    // Iris lerp & pulse
+    if (irisGroupRef.current) {
+      irisGroupRef.current.position.x +=
+        (targetPos.current.x - irisGroupRef.current.position.x) * 0.06;
+      irisGroupRef.current.position.y +=
+        (targetPos.current.y - irisGroupRef.current.position.y) * 0.06;
+      irisGroupRef.current.position.z = Math.sin(time * 0.8) * 0.15;
+      irisGroupRef.current.rotation.z -= 0.3 * delta;
     }
 
-    // Blinking
-    blinkTimer.current -= delta;
-    if (blinkTimer.current <= 0) {
-      blinkTimer.current = 3 + Math.random() * 4;
-      blinkState.current = 0.001;
+    // 3D rotation of whole eye
+    if (sceneGroupRef.current) {
+      const targetRotY = targetPos.current.x * 0.15;
+      const targetRotX = -targetPos.current.y * 0.08;
+      sceneGroupRef.current.rotation.y +=
+        (targetRotY - sceneGroupRef.current.rotation.y) * 0.06;
+      sceneGroupRef.current.rotation.x +=
+        (targetRotX - sceneGroupRef.current.rotation.x) * 0.06;
     }
 
-    if (blinkState.current > 0 && blinkRef.current) {
-      blinkState.current += delta * 6;
-      const progress = blinkState.current;
-      let scaleY: number;
-      if (progress < 1) scaleY = progress;
-      else if (progress < 2) scaleY = 2 - progress;
-      else {
-        scaleY = 0;
-        blinkState.current = 0;
+    // Blinking logic
+    blinkTimer.current -= delta * 1000;
+
+    if (blinkTimer.current <= 0 && !isBlinking.current) {
+      isBlinking.current = true;
+      blinkPhase.current = 0;
+      blinkTimer.current = 2000 + Math.random() * 4000;
+    }
+
+    if (isBlinking.current) {
+      blinkPhase.current += delta * 8; // speed of blink
+
+      if (blinkPhase.current < 1) {
+        // closing
+        const t = blinkPhase.current;
+        if (topLidRef.current) topLidRef.current.scale.y = t * 0.95 + 0.05;
+        if (bottomLidRef.current) bottomLidRef.current.scale.y = t * 0.95 + 0.05;
+      } else if (blinkPhase.current < 2) {
+        // opening
+        const t = blinkPhase.current - 1;
+        if (topLidRef.current) topLidRef.current.scale.y = 1 - t * 0.95;
+        if (bottomLidRef.current) bottomLidRef.current.scale.y = 1 - t * 0.95;
+      } else {
+        // done
+        isBlinking.current = false;
+        if (topLidRef.current) topLidRef.current.scale.y = 0.05;
+        if (bottomLidRef.current) bottomLidRef.current.scale.y = 0.05;
       }
-      blinkRef.current.scale.y = Math.max(0.01, scaleY);
     }
   });
 
-  // Top Eyelid shape (upper half of eye, strictly bounded by eye curve)
-  const lidShape = new THREE.Shape();
-  lidShape.moveTo(-2.5, 0);
-  lidShape.bezierCurveTo(-2.5, 0, -0.8, 0.9, 0, 0.9);
-  lidShape.bezierCurveTo(0.8, 0.9, 2.5, 0, 2.5, 0);
-  lidShape.bezierCurveTo(0.8, 0, 0, 0, -2.5, 0);
+  return (
+    <group ref={sceneGroupRef}>
+      <ambientLight intensity={0.3} />
+      <pointLight position={[1, 1, 2]} color="#4A9BAB" intensity={3.0} />
+      <pointLight position={[-1, -0.5, 1]} color="#132E35" intensity={1.0} />
 
-  // Bottom Eyelid shape (lower half of eye, strictly bounded by eye curve)
-  const bottomLidShape = new THREE.Shape();
-  bottomLidShape.moveTo(-2.5, 0);
-  bottomLidShape.bezierCurveTo(-2.5, 0, -0.8, -0.9, 0, -0.9);
-  bottomLidShape.bezierCurveTo(0.8, -0.9, 2.5, 0, 2.5, 0);
-  bottomLidShape.bezierCurveTo(0.8, 0, 0, 0, -2.5, 0);
+      {/* Eye outline */}
+      <lineSegments geometry={eyeEdgesGeo}>
+        <lineBasicMaterial color="#AFB3B7" linewidth={1.5} />
+      </lineSegments>
+
+      {/* Iris Group */}
+      <group ref={irisGroupRef}>
+        <pointLight position={[0, 0, 1.5]} color="#4A9BAB" intensity={2.0} />
+
+        {/* Ring */}
+        <mesh position={[0, 0, 0]}>
+          <ringGeometry args={[0.75, 1.1, 48]} />
+          <meshStandardMaterial
+            color="#4A9BAB"
+            emissive="#4A9BAB"
+            emissiveIntensity={0.8}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+
+        {/* Void */}
+        <mesh position={[0, 0, -0.01]}>
+          <circleGeometry args={[0.75, 32]} />
+          <meshBasicMaterial color="#050A0E" side={THREE.DoubleSide} />
+        </mesh>
+
+        {/* Center Dot */}
+        <mesh position={[0, 0, 0.01]}>
+          <circleGeometry args={[0.25, 24]} />
+          <meshBasicMaterial color="#4A9BAB" side={THREE.DoubleSide} />
+        </mesh>
+      </group>
+
+      {/* Top Eyelid Overlay (sits in FRONT of iris at z=0.5) */}
+      <mesh
+        ref={topLidRef}
+        position={[0, 1.1, 0.5]}
+        scale={[1, 0.05, 1]}
+        geometry={topLidGeo}
+      >
+        <meshBasicMaterial color="#050A0E" side={THREE.DoubleSide} />
+      </mesh>
+
+      {/* Bottom Eyelid Overlay (sits in FRONT of iris at z=0.5) */}
+      <mesh
+        ref={bottomLidRef}
+        position={[0, -1.1, 0.5]}
+        scale={[1, 0.05, 1]}
+        geometry={bottomLidGeo}
+      >
+        <meshBasicMaterial color="#050A0E" side={THREE.DoubleSide} />
+      </mesh>
+
+      {/* Particles orbit outside */}
+      <Particles />
+    </group>
+  );
+}
+
+function Particles() {
+  const numParticles = 12;
+  const particleRefs = useRef<THREE.Mesh[]>([]);
+  const lineGeoRef = useRef<THREE.BufferGeometry>(null);
+
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
+    const speed = (Math.PI * 2) / 8;
+
+    const positions: number[] = [];
+
+    for (let i = 0; i < numParticles; i++) {
+      const angle = (i / numParticles) * Math.PI * 2 + time * speed;
+      const x = Math.cos(angle) * 1.9;
+      const y = Math.sin(angle) * 0.7;
+
+      const mesh = particleRefs.current[i];
+      if (mesh) {
+        mesh.position.set(x, y, 0);
+
+        const material = mesh.material as THREE.MeshStandardMaterial;
+        if (x < 0) {
+          material.opacity = 0.3 + (Math.abs(x) / 1.9) * 0.7;
+          material.transparent = true;
+        } else {
+          material.opacity = 1.0;
+          material.transparent = false;
+        }
+      }
+
+      const nextAngle =
+        (((i + 1) % numParticles) / numParticles) * Math.PI * 2 + time * speed;
+      const nextX = Math.cos(nextAngle) * 1.9;
+      const nextY = Math.sin(nextAngle) * 0.7;
+
+      if (x < 0 && nextX < 0) {
+        positions.push(x, y, 0);
+        positions.push(nextX, nextY, 0);
+      }
+    }
+
+    if (lineGeoRef.current) {
+      if (positions.length > 0) {
+        lineGeoRef.current.setAttribute(
+          "position",
+          new THREE.Float32BufferAttribute(positions, 3)
+        );
+        lineGeoRef.current.setDrawRange(0, positions.length / 3);
+      } else {
+        lineGeoRef.current.setDrawRange(0, 0);
+      }
+    }
+  });
 
   return (
     <group>
-      {/* Eye outline — top arc */}
-      <mesh>
-        <tubeGeometry
-          args={[
-            new THREE.CatmullRomCurve3([
-              new THREE.Vector3(-2.5, 0, 0),
-              new THREE.Vector3(-1.2, 0.75, 0),
-              new THREE.Vector3(0, 0.9, 0),
-              new THREE.Vector3(1.2, 0.75, 0),
-              new THREE.Vector3(2.5, 0, 0),
-            ]),
-            64,
-            0.018,
-            8,
-            false,
-          ]}
-        />
-        <meshBasicMaterial color="#8A9BA8" />
-      </mesh>
-
-      {/* Eye outline — bottom arc (darker, thicker) */}
-      <mesh>
-        <tubeGeometry
-          args={[
-            new THREE.CatmullRomCurve3([
-              new THREE.Vector3(-2.5, 0, 0),
-              new THREE.Vector3(-1.2, -0.75, 0),
-              new THREE.Vector3(0, -0.9, 0),
-              new THREE.Vector3(1.2, -0.75, 0),
-              new THREE.Vector3(2.5, 0, 0),
-            ]),
-            64,
-            0.028,
-            8,
-            false,
-          ]}
-        />
-        <meshBasicMaterial color="#1C3A42" />
-      </mesh>
-
-      {/* Corner dots */}
-      {[
-        [-2.5, 0],
-        [2.5, 0],
-      ].map(([x, y], i) => (
-        <mesh key={i} position={[x, y, 0.1]}>
-          <sphereGeometry args={[0.06, 16, 16]} />
-          <meshBasicMaterial color="#4A9BAB" />
-        </mesh>
-      ))}
-
-      {/* Landmark dots — left side only */}
-      {[
-        [-1.8, 0.55],
-        [-1.2, 0.78],
-        [-0.5, 0.87],
-        [-1.8, -0.55],
-        [-1.2, -0.72],
-      ].map(([x, y], i) => (
-        <mesh key={i} position={[x, y, 0.05]}>
-          <sphereGeometry args={[0.03, 8, 8]} />
+      {Array.from({ length: numParticles }).map((_, i) => (
+        <mesh
+          key={i}
+          ref={(el) => {
+            if (el) particleRefs.current[i] = el;
+          }}
+        >
+          <sphereGeometry args={[0.035, 12, 12]} />
           <meshStandardMaterial
             color="#4A9BAB"
             emissive="#4A9BAB"
-            emissiveIntensity={0.6}
+            emissiveIntensity={0.8}
           />
         </mesh>
       ))}
-
-      {/* Iris group — this moves with cursor */}
-      <group ref={irisRef}>
-        {/* Outer rotating ring */}
-        <mesh ref={outerRingRef} position={[0, 0, 0.1]}>
-          <ringGeometry args={[0.55, 0.65, 64]} />
-          <meshStandardMaterial
-            color="#4A9BAB"
-            emissive="#4A9BAB"
-            emissiveIntensity={0.3}
-            transparent
-            opacity={0.6}
-          />
-        </mesh>
-
-        {/* Main iris */}
-        <mesh position={[0, 0, 0.15]}>
-          <circleGeometry args={[0.5, 64]} />
-          <meshStandardMaterial
-            color="#4A9BAB"
-            emissive="#4A9BAB"
-            emissiveIntensity={0.4}
-          />
-        </mesh>
-
-        {/* Pupil */}
-        <mesh position={[0, 0, 0.2]}>
-          <circleGeometry args={[0.22, 64]} />
-          <meshBasicMaterial color="#030810" />
-        </mesh>
-
-        {/* Pupil highlight */}
-        <mesh position={[0.08, 0.08, 0.25]}>
-          <circleGeometry args={[0.06, 32]} />
-          <meshBasicMaterial color="#7ECFDB" />
-        </mesh>
-      </group>
-
-      {/* BLINK OVERLAY — covers iris during blink, stays strictly inside eye boundary */}
-      <group ref={blinkRef} position={[0, 0, 0.3]} scale={[1, 0.01, 1]}>
-        {/* Top lid */}
-        <mesh position={[0, 0, 0]}>
-          <shapeGeometry args={[lidShape]} />
-          <meshBasicMaterial color="#050A0E" />
-        </mesh>
-        {/* Bottom lid */}
-        <mesh position={[0, 0, 0]}>
-          <shapeGeometry args={[bottomLidShape]} />
-          <meshBasicMaterial color="#050A0E" />
-        </mesh>
-      </group>
-
-      {/* Lighting */}
-      <ambientLight intensity={0.4} />
-      <pointLight position={[0.5, 0.5, 2]} color="#4A9BAB" intensity={2} />
-      <pointLight position={[-1, -0.5, 1]} color="#132E35" intensity={0.8} />
+      <lineSegments>
+        <bufferGeometry ref={lineGeoRef} />
+        <lineBasicMaterial color="#4A9BAB" opacity={0.3} transparent={true} />
+      </lineSegments>
     </group>
   );
 }
@@ -205,16 +291,13 @@ function EyeScene() {
 export default function CursorEye() {
   return (
     <div
-      className="w-[320px] h-[160px] md:w-[520px] md:h-[260px] mx-auto md:mx-0 mt-12 md:mt-0 pointer-events-none"
+      className="w-[320px] h-[180px] md:w-[580px] md:h-[360px] mx-auto md:mx-0 mt-12 md:mt-0 pointer-events-none"
       style={{
-        filter: 'drop-shadow(0 0 25px rgba(74,155,171,0.2))',
+        clipPath: 'path("M 82,180 C 82,180 228,95 290,95 C 352,95 498,180 498,180 C 498,180 352,265 290,265 C 228,265 82,180 82,180 Z")',
+        overflow: 'hidden'
       }}
     >
-      <Canvas
-        camera={{ position: [0, 0, 4], fov: 50 }}
-        gl={{ alpha: true, antialias: true }}
-        style={{ background: 'transparent' }}
-      >
+      <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
         <EyeScene />
       </Canvas>
     </div>
