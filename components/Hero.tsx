@@ -32,7 +32,7 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 4.5 }}
-        className="md:absolute md:right-[8%] md:top-1/2 md:-translate-y-1/2 z-20"
+        className="hidden md:block md:absolute md:right-[8%] md:top-1/2 md:-translate-y-1/2 z-20"
       >
         <CursorEye />
       </motion.div>

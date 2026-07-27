@@ -49,7 +49,7 @@ export default function PersonaCards() {
   };
 
   return (
-    <section className="w-full bg-background py-28 px-6 md:px-12 relative overflow-hidden">
+    <section className="w-full bg-background py-12 md:py-28 px-6 md:px-12 relative overflow-hidden">
       {/* Subtle grid background */}
       <div
         className="absolute inset-0 opacity-[0.03]"
@@ -61,7 +61,7 @@ export default function PersonaCards() {
       />
 
       {/* Section Header */}
-      <div className="relative text-center max-w-3xl mx-auto mb-20 space-y-4">
+      <div className="relative text-center max-w-3xl mx-auto mb-10 md:mb-20 space-y-2 md:space-y-4">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent/30 bg-surface/30 backdrop-blur-md text-utility text-xs font-mono tracking-widest uppercase shadow-sm">
           <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
           <span>Built For Everyone</span>
@@ -76,7 +76,7 @@ export default function PersonaCards() {
       </div>
 
       {/* Cards Grid */}
-      <div className="relative max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="relative max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         {personas.map((p, i) => {
           const isHovered = hoveredIndex === i;
           return (
@@ -137,12 +137,12 @@ export default function PersonaCards() {
                   style={{ borderColor: isHovered ? p.accent : "rgba(105,129,141,0.3)" }}
                 />
 
-                <div className="p-8 md:p-10">
+                <div className="p-5 md:p-10">
                   {/* Header */}
-                  <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center justify-between mb-4 md:mb-8">
                     <div className="flex items-baseline gap-3">
                       <span
-                        className="font-mono text-3xl font-bold transition-colors duration-500"
+                        className="font-mono text-2xl md:text-3xl font-bold transition-colors duration-500"
                         style={{
                           color: isHovered ? p.accent : "rgba(74,155,171,0.25)",
                         }}
@@ -150,7 +150,7 @@ export default function PersonaCards() {
                         {p.code}
                       </span>
                       <h3
-                        className="font-display font-bold text-xl tracking-[0.15em] transition-colors duration-500"
+                        className="font-display font-bold text-lg md:text-xl tracking-[0.15em] transition-colors duration-500"
                         style={{ color: isHovered ? "#FFFFFF" : "#C0C4C8" }}
                       >
                         {p.role}
@@ -176,7 +176,7 @@ export default function PersonaCards() {
 
                   {/* Divider */}
                   <div
-                    className="h-px mb-6 transition-all duration-500"
+                    className="h-px mb-4 md:mb-6 transition-all duration-500"
                     style={{
                       background: isHovered
                         ? `linear-gradient(90deg, ${p.accent}60, transparent)`
@@ -185,11 +185,11 @@ export default function PersonaCards() {
                   />
 
                   {/* Pain */}
-                  <div className="mb-5">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-textPrimary/30 block mb-2">
+                  <div className="mb-3 md:mb-5">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-textPrimary/30 block mb-1 md:mb-2">
                       ▸ Without Perceiva
                     </span>
-                    <p className="font-body text-textPrimary/60 text-[15px] leading-relaxed">
+                    <p className="font-body text-textPrimary/60 text-sm md:text-[15px] leading-relaxed">
                       {p.pain}
                     </p>
                   </div>
@@ -197,13 +197,13 @@ export default function PersonaCards() {
                   {/* Benefit */}
                   <div>
                     <span
-                      className="font-mono text-[10px] uppercase tracking-[0.25em] block mb-2 transition-colors duration-500"
+                      className="font-mono text-[10px] uppercase tracking-[0.25em] block mb-1 md:mb-2 transition-colors duration-500"
                       style={{ color: isHovered ? p.accent : "rgba(74,155,171,0.5)" }}
                     >
                       ▸ With Perceiva
                     </span>
                     <p
-                      className="font-body text-[15px] leading-relaxed font-medium transition-colors duration-500"
+                      className="font-body text-sm md:text-[15px] leading-relaxed font-medium transition-colors duration-500"
                       style={{ color: isHovered ? "#E8EAED" : "#9BA1A8" }}
                     >
                       {p.benefit}
@@ -212,7 +212,7 @@ export default function PersonaCards() {
 
                   {/* CTA on hover */}
                   <div
-                    className="mt-6 pt-4 border-t flex items-center justify-between transition-all duration-500"
+                    className="mt-4 md:mt-6 pt-3 md:pt-4 border-t flex items-center justify-between transition-all duration-500"
                     style={{
                       borderColor: isHovered ? `${p.accent}30` : "transparent",
                       opacity: isHovered ? 1 : 0,
