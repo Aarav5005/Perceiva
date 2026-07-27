@@ -80,65 +80,66 @@ export default function ProblemSection() {
     const container = textContainerRef.current;
     if (!section || !container) return;
 
-    const lineElements = gsap.utils.toArray<HTMLElement>(".problem-statement", container);
+    const ctx = gsap.context(() => {
+      const lineElements = gsap.utils.toArray<HTMLElement>(".problem-statement", container);
 
-    // Initial state for all statement lines
-    gsap.set(lineElements, { opacity: 0, y: 30, filter: "blur(12px)", scale: 0.96, pointerEvents: "none" });
+      // Initial state for all statement lines
+      gsap.set(lineElements, { opacity: 0, y: 30, filter: "blur(12px)", scale: 0.96, pointerEvents: "none" });
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: "top top",
-        end: "+=350%",
-        pin: true,
-        scrub: 1,
-        anticipatePin: 1,
-        onUpdate: (self) => {
-          const idx = Math.min(
-            STATEMENTS.length - 1,
-            Math.floor(self.progress * STATEMENTS.length)
-          );
-          setActiveIndex(idx);
-        },
-      },
-    });
-
-    lineElements.forEach((line, index) => {
-      // 1. Reveal line in center
-      tl.to(line, {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        filter: "blur(0px)",
-        duration: 1,
-        ease: "power2.out",
-        onStart: () => {
-          line.style.pointerEvents = "auto";
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "+=350%",
+          pin: true,
+          scrub: 1,
+          anticipatePin: 1,
+          onUpdate: (self) => {
+            const idx = Math.min(
+              STATEMENTS.length - 1,
+              Math.floor(self.progress * STATEMENTS.length)
+            );
+            setActiveIndex(idx);
+          },
         },
       });
 
-      // Hold visible
-      tl.to(line, { duration: 1.2 });
-
-      // 2. Hide line upward (except final climax line)
-      if (index < lineElements.length - 1) {
+      lineElements.forEach((line, index) => {
+        // 1. Reveal line in center
         tl.to(line, {
-          opacity: 0,
-          y: -30,
-          scale: 0.96,
-          filter: "blur(12px)",
-          duration: 0.8,
-          ease: "power2.in",
-          onComplete: () => {
-            line.style.pointerEvents = "none";
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          filter: "blur(0px)",
+          duration: 1,
+          ease: "power2.out",
+          onStart: () => {
+            line.style.pointerEvents = "auto";
           },
         });
-      }
-    });
+
+        // Hold visible
+        tl.to(line, { duration: 1.2 });
+
+        // 2. Hide line upward (except final climax line)
+        if (index < lineElements.length - 1) {
+          tl.to(line, {
+            opacity: 0,
+            y: -30,
+            scale: 0.96,
+            filter: "blur(12px)",
+            duration: 0.8,
+            ease: "power2.in",
+            onComplete: () => {
+              line.style.pointerEvents = "none";
+            },
+          });
+        }
+      });
+    }, section);
 
     return () => {
-      tl.kill();
-      ScrollTrigger.getAll().forEach((st) => st.kill());
+      ctx.revert();
     };
   }, []);
 

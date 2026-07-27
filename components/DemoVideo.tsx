@@ -15,18 +15,20 @@ export default function DemoVideo() {
   useEffect(() => {
     if (!videoRef.current || !containerRef.current) return;
 
-    const trigger = ScrollTrigger.create({
-      trigger: containerRef.current,
-      start: "top 75%",
-      end: "bottom 25%",
-      onEnter: () => videoRef.current?.play().catch(() => {}),
-      onLeave: () => videoRef.current?.pause(),
-      onEnterBack: () => videoRef.current?.play().catch(() => {}),
-      onLeaveBack: () => videoRef.current?.pause(),
-    });
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: containerRef.current,
+        start: "top 75%",
+        end: "bottom 25%",
+        onEnter: () => videoRef.current?.play().catch(() => {}),
+        onLeave: () => videoRef.current?.pause(),
+        onEnterBack: () => videoRef.current?.play().catch(() => {}),
+        onLeaveBack: () => videoRef.current?.pause(),
+      });
+    }, containerRef);
 
     return () => {
-      trigger.kill();
+      ctx.revert();
     };
   }, []);
 

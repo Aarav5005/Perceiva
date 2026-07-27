@@ -4,6 +4,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
 import * as THREE from "three";
 import { useMemo, useRef } from "react";
+import { useInView } from "framer-motion";
 
 function LandmarkMesh() {
   const pointsRef = useRef<THREE.Points>(null);
@@ -86,6 +87,9 @@ function LandmarkMesh() {
 }
 
 export default function Panel1Sees() {
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { margin: "200px" });
+
   return (
     <div className="w-full h-full bg-[radial-gradient(ellipse_at_center,_#0D1F23_0%,_#050A0E_100%)] px-6 md:px-16 py-24 flex flex-col md:flex-row items-center justify-center gap-12 md:gap-16">
       
@@ -121,10 +125,12 @@ export default function Panel1Sees() {
           </div>
 
           {/* 3D Canvas */}
-          <div className="w-full h-full">
-            <Canvas camera={{ position: [0, 0, 3.8] }}>
-              <LandmarkMesh />
-            </Canvas>
+          <div ref={containerRef} className="w-full h-full">
+            {isInView && (
+              <Canvas camera={{ position: [0, 0, 3.8] }}>
+                <LandmarkMesh />
+              </Canvas>
+            )}
           </div>
 
           {/* HUD Bottom Status */}

@@ -53,39 +53,38 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
     const scroller = scrollContainerRef && scrollContainerRef.current ? scrollContainerRef.current : window;
     const charElements = el.querySelectorAll('.char');
 
-    const anim = gsap.fromTo(
-      charElements,
-      {
-        willChange: 'opacity, transform',
-        opacity: 0,
-        yPercent: 70,
-        scaleY: 1.35,
-        scaleX: 0.9,
-        transformOrigin: '50% 0%'
-      },
-      {
-        duration: animationDuration,
-        ease: ease,
-        opacity: 1,
-        yPercent: 0,
-        scaleY: 1,
-        scaleX: 1,
-        stagger: stagger,
-        scrollTrigger: {
-          trigger: el,
-          scroller,
-          start: scrollStart,
-          end: scrollEnd,
-          scrub: scrub
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        charElements,
+        {
+          willChange: 'opacity, transform',
+          opacity: 0,
+          yPercent: 70,
+          scaleY: 1.35,
+          scaleX: 0.9,
+          transformOrigin: '50% 0%'
+        },
+        {
+          duration: animationDuration,
+          ease: ease,
+          opacity: 1,
+          yPercent: 0,
+          scaleY: 1,
+          scaleX: 1,
+          stagger: stagger,
+          scrollTrigger: {
+            trigger: el,
+            scroller,
+            start: scrollStart,
+            end: scrollEnd,
+            scrub: scrub
+          }
         }
-      }
-    );
+      );
+    }, el);
 
     return () => {
-      if (anim.scrollTrigger) {
-        anim.scrollTrigger.kill();
-      }
-      anim.kill();
+      ctx.revert();
     };
   }, [scrollContainerRef, animationDuration, ease, scrollStart, scrollEnd, stagger, scrub]);
 

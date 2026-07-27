@@ -29,7 +29,7 @@ export default function FeatureSteps() {
       gsap.to(card1, {
         scale: 0.94,
         opacity: 0.5,
-        filter: "blur(4px)",
+        willChange: "transform, opacity",
         ease: "none",
         scrollTrigger: {
           trigger: card2,
@@ -43,7 +43,7 @@ export default function FeatureSteps() {
       gsap.to(card2, {
         scale: 0.95,
         opacity: 0.6,
-        filter: "blur(3px)",
+        willChange: "transform, opacity",
         ease: "none",
         scrollTrigger: {
           trigger: card3,
@@ -80,7 +80,7 @@ export default function FeatureSteps() {
         {/* Step 01 */}
         <div 
           ref={card1Ref}
-          className="sticky top-20 md:top-24 z-10 w-full rounded-3xl border border-accent/25 bg-surface/40 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300"
+          className="sticky top-20 md:top-24 z-10 w-full rounded-3xl border border-accent/25 bg-surface/40 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden"
         >
           <Panel1Sees />
         </div>
@@ -88,7 +88,7 @@ export default function FeatureSteps() {
         {/* Step 02 */}
         <div 
           ref={card2Ref}
-          className="sticky top-24 md:top-28 z-20 w-full rounded-3xl border border-accent/25 bg-surface/40 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300"
+          className="sticky top-24 md:top-28 z-20 w-full rounded-3xl border border-accent/25 bg-surface/40 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden"
         >
           <Panel2Understands />
         </div>
@@ -96,7 +96,7 @@ export default function FeatureSteps() {
         {/* Step 03 */}
         <div 
           ref={card3Ref}
-          className="sticky top-28 md:top-32 z-30 w-full rounded-3xl border border-pureWhite/20 bg-surface/40 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300"
+          className="sticky top-28 md:top-32 z-30 w-full rounded-3xl border border-pureWhite/20 bg-surface/40 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden"
         >
           <Panel3Remembers />
         </div>
