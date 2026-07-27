@@ -184,13 +184,7 @@ function Particles() {
 
 export default function CursorEye() {
   return (
-    <div 
-      className="w-[320px] h-[180px] md:w-[580px] md:h-[360px] mx-auto md:mx-0 mt-12 md:mt-0 pointer-events-none"
-      style={{ 
-        boxShadow: '0 0 60px rgba(74, 155, 171, 0.15)',
-        filter: 'drop-shadow(0 0 40px rgba(74, 155, 171, 0.3))'
-      }}
-    >
+    <div className="w-[320px] h-[180px] md:w-[580px] md:h-[360px] mx-auto md:mx-0 mt-12 md:mt-0 pointer-events-none">
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
         <EyeScene />
       </Canvas>
