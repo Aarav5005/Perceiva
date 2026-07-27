@@ -10,23 +10,62 @@ if (typeof window !== "undefined") {
 
 const STATEMENTS = [
   {
-    html: <>Someone in your classroom is <span className="text-pureWhite font-semibold underline decoration-accent/50 decoration-2 underline-offset-4">struggling right now</span>.</>,
+    html: (
+      <>
+        Someone in your classroom is{" "}
+        <span className="text-accent drop-shadow-[0_0_18px_rgba(74,155,171,0.7)] font-semibold">
+          struggling right now
+        </span>
+        .
+      </>
+    ),
     climax: false,
   },
   {
-    html: <>You <span className="text-pureWhite font-semibold">can't see them</span>.</>,
+    html: (
+      <>
+        You{" "}
+        <span className="text-accent drop-shadow-[0_0_18px_rgba(74,155,171,0.7)] font-semibold">
+          can't see them
+        </span>
+        .
+      </>
+    ),
     climax: false,
   },
   {
-    html: <>They <span className="text-pureWhite font-semibold">won't tell you</span>.</>,
+    html: (
+      <>
+        They{" "}
+        <span className="text-accent drop-shadow-[0_0_18px_rgba(74,155,171,0.7)] font-semibold">
+          won't tell you
+        </span>
+        .
+      </>
+    ),
     climax: false,
   },
   {
-    html: <>By the time marks fall, it's <span className="text-rose-400/90 font-semibold underline decoration-rose-500/40 underline-offset-4">already too late</span>.</>,
+    html: (
+      <>
+        By the time marks fall, it's{" "}
+        <span className="text-rose-400 drop-shadow-[0_0_18px_rgba(244,63,94,0.7)] font-semibold">
+          already too late
+        </span>
+        .
+      </>
+    ),
     climax: false,
   },
   {
-    html: <>Perceiva <span className="text-accent drop-shadow-[0_0_20px_rgba(74,155,171,0.4)]">sees what teachers can't.</span></>,
+    html: (
+      <>
+        Perceiva{" "}
+        <span className="text-accent drop-shadow-[0_0_25px_rgba(74,155,171,0.8)] font-bold">
+          sees what teachers can't.
+        </span>
+      </>
+    ),
     climax: true,
   },
 ];
@@ -44,7 +83,7 @@ export default function ProblemSection() {
     const lineElements = gsap.utils.toArray<HTMLElement>(".problem-statement", container);
 
     // Initial state for all statement lines
-    gsap.set(lineElements, { opacity: 0, y: 40, filter: "blur(12px)", pointerEvents: "none" });
+    gsap.set(lineElements, { opacity: 0, y: 30, filter: "blur(12px)", scale: 0.96, pointerEvents: "none" });
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -55,7 +94,6 @@ export default function ProblemSection() {
         scrub: 1,
         anticipatePin: 1,
         onUpdate: (self) => {
-          // Calculate current active statement index (0 to 4)
           const idx = Math.min(
             STATEMENTS.length - 1,
             Math.floor(self.progress * STATEMENTS.length)
@@ -70,6 +108,7 @@ export default function ProblemSection() {
       tl.to(line, {
         opacity: 1,
         y: 0,
+        scale: 1,
         filter: "blur(0px)",
         duration: 1,
         ease: "power2.out",
@@ -85,7 +124,8 @@ export default function ProblemSection() {
       if (index < lineElements.length - 1) {
         tl.to(line, {
           opacity: 0,
-          y: -40,
+          y: -30,
+          scale: 0.96,
           filter: "blur(12px)",
           duration: 0.8,
           ease: "power2.in",
@@ -105,54 +145,76 @@ export default function ProblemSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-screen bg-[radial-gradient(ellipse_at_top,_#0D1F23_0%,_#050A0E_60%,_#030608_100%)] px-6 md:px-12 flex flex-col items-center justify-between py-16 text-center overflow-hidden"
+      className="relative w-full h-screen bg-[#03070A] px-6 md:px-12 flex flex-col items-center justify-between py-12 text-center overflow-hidden font-display"
     >
-      {/* Background Dynamic Ambient Light */}
+      {/* Sci-Fi Grid Background Pattern */}
+      <div className="absolute inset-0 bg-[radial-gradient(#132E35_1px,transparent_1px)] [background-size:36px_36px] opacity-30 pointer-events-none" />
+
+      {/* Futuristic Animated Concentric Target Radar Circles */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] rounded-full border border-accent/15 border-dashed animate-[spin_90s_linear_infinite] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[380px] rounded-full border border-accent/10 pointer-events-none" />
+
+      {/* Ambient Lighting Orbs */}
       <div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-[150px] pointer-events-none transition-all duration-700"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] rounded-full blur-[140px] pointer-events-none transition-all duration-700"
         style={{
-          backgroundColor: activeIndex === 4 ? "rgba(74, 155, 171, 0.18)" : activeIndex === 3 ? "rgba(244, 63, 94, 0.12)" : "rgba(74, 155, 171, 0.08)"
+          backgroundColor: activeIndex === 4 ? "rgba(74, 155, 171, 0.22)" : activeIndex === 3 ? "rgba(244, 63, 94, 0.15)" : "rgba(74, 155, 171, 0.09)"
         }}
       />
 
-      {/* Top Section Badge */}
-      <div className="z-20 inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-accent/20 bg-surface/30 backdrop-blur-md text-utility text-xs font-mono tracking-widest uppercase shadow-sm">
-        <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-        <span>Classroom Reality</span>
+      {/* Top Futuristic Telemetry Bar */}
+      <div className="z-20 w-full max-w-5xl flex justify-between items-center text-[10px] font-mono text-utility tracking-widest uppercase">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-accent animate-ping" />
+          <span className="text-accent/90">SYS_DIAG // OBSERVER_FEED</span>
+        </div>
+        <div className="hidden sm:block text-accent/60">
+          SIGNAL: OPTIMAL · 60 FPS
+        </div>
       </div>
 
-      {/* Center Pinned Statements Stage */}
-      <div ref={textContainerRef} className="relative z-10 w-full max-w-4xl min-h-[220px] flex items-center justify-center my-auto">
-        {STATEMENTS.map((item, idx) => (
-          <div
-            key={idx}
-            className="problem-statement absolute inset-x-0 flex items-center justify-center px-4"
-          >
-            {item.climax ? (
-              <div className="relative w-full max-w-3xl p-8 md:p-14 rounded-3xl bg-surface/30 backdrop-blur-2xl border border-accent/35 shadow-[0_0_80px_rgba(74,155,171,0.2)] overflow-hidden">
-                
-                {/* Glowing Eye Icon Header */}
-                <div className="w-12 h-12 mx-auto mb-6 rounded-full bg-accent/20 border border-accent/50 flex items-center justify-center text-accent shadow-[0_0_20px_rgba(74,155,171,0.4)]">
-                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                  </svg>
-                </div>
+      {/* Center Tactical HUD Hologram Stage */}
+      <div className="relative z-10 w-full max-w-3xl my-auto">
+        <div className="relative p-8 md:p-14 rounded-3xl bg-surface/20 backdrop-blur-2xl border border-accent/30 shadow-[0_0_60px_rgba(74,155,171,0.12)] overflow-hidden min-h-[220px] flex items-center justify-center">
+          
+          {/* HUD Corner Brackets */}
+          <div className="absolute top-4 left-4 w-3.5 h-3.5 border-t-2 border-l-2 border-accent/70" />
+          <div className="absolute top-4 right-4 w-3.5 h-3.5 border-t-2 border-r-2 border-accent/70" />
+          <div className="absolute bottom-4 left-4 w-3.5 h-3.5 border-b-2 border-l-2 border-accent/70" />
+          <div className="absolute bottom-4 right-4 w-3.5 h-3.5 border-b-2 border-r-2 border-accent/70" />
 
-                <h2 className="font-display font-bold text-2xl md:text-4xl lg:text-5xl text-pureWhite leading-tight tracking-tight">
-                  {item.html}
-                </h2>
+          {/* Statement Lines Stage */}
+          <div ref={textContainerRef} className="w-full flex items-center justify-center">
+            {STATEMENTS.map((item, idx) => (
+              <div
+                key={idx}
+                className="problem-statement absolute inset-x-0 flex flex-col items-center justify-center px-4"
+              >
+                {item.climax ? (
+                  <>
+                    <div className="w-10 h-10 mb-4 rounded-full bg-accent/20 border border-accent/50 flex items-center justify-center text-accent shadow-[0_0_20px_rgba(74,155,171,0.5)]">
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </div>
+                    <h2 className="font-display font-bold text-2xl md:text-4xl text-pureWhite leading-tight tracking-tight">
+                      {item.html}
+                    </h2>
+                  </>
+                ) : (
+                  <h2 className="font-display font-medium text-xl md:text-3xl text-pureWhite/90 leading-relaxed tracking-tight max-w-2xl">
+                    {item.html}
+                  </h2>
+                )}
               </div>
-            ) : (
-              <h2 className="font-display font-medium text-xl md:text-3xl lg:text-4xl text-textPrimary/90 leading-relaxed tracking-tight max-w-3xl">
-                {item.html}
-              </h2>
-            )}
+            ))}
           </div>
-        ))}
+
+        </div>
       </div>
 
-      {/* Bottom Progress Bar & Step Counter */}
+      {/* Bottom Futuristic HUD Controller & Step Counter */}
       <div className="z-20 flex flex-col items-center gap-3">
         <div className="flex items-center gap-2">
           {STATEMENTS.map((_, i) => (
@@ -160,17 +222,19 @@ export default function ProblemSection() {
               key={i}
               className={`h-1.5 rounded-full transition-all duration-500 ${
                 i === activeIndex
-                  ? "w-10 bg-accent shadow-[0_0_12px_rgba(74,155,171,0.8)]"
+                  ? "w-8 bg-accent shadow-[0_0_14px_rgba(74,155,171,0.9)]"
                   : i < activeIndex
-                  ? "w-4 bg-accent/40"
-                  : "w-4 bg-surface/60"
+                  ? "w-3 bg-accent/50"
+                  : "w-3 bg-surface/60"
               }`}
             />
           ))}
         </div>
-        <span className="font-mono text-utility text-xs tracking-widest uppercase">
-          0{activeIndex + 1} / 0{STATEMENTS.length}
-        </span>
+        <div className="font-mono text-utility text-[11px] tracking-widest uppercase flex items-center gap-2">
+          <span className="text-accent font-bold">STATE 0{activeIndex + 1}</span>
+          <span className="text-utility/50">/</span>
+          <span>0{STATEMENTS.length}</span>
+        </div>
       </div>
 
     </section>
