@@ -6,7 +6,7 @@ import SideRays from "./SideRays";
 
 export default function Hero() {
   return (
-    <section className="relative w-full h-screen flex flex-col justify-center px-6 md:px-12 bg-[radial-gradient(ellipse_at_center,_var(--color-surface)_0%,_var(--color-background)_100%)] overflow-visible">
+    <section className="relative w-full min-h-screen flex flex-col justify-center px-6 md:px-12 bg-[radial-gradient(ellipse_at_center,_var(--color-surface)_0%,_var(--color-background)_100%)] overflow-hidden">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -32,7 +32,7 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 4.5 }}
-        className="md:absolute md:right-[3%] md:top-1/2 md:-translate-y-1/2 z-20"
+        className="md:absolute md:right-[8%] md:top-1/2 md:-translate-y-1/2 z-20"
       >
         <CursorEye />
       </motion.div>
