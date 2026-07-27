@@ -11,15 +11,15 @@ function EyeScene() {
 
   // Outer Eye Arcs
   const topCurve = useMemo(() => new THREE.CatmullRomCurve3([
-    new THREE.Vector3(-2, 0, 0),
-    new THREE.Vector3(0, 0.8, 0),
-    new THREE.Vector3(2, 0, 0),
+    new THREE.Vector3(-2.75, 0, 0),
+    new THREE.Vector3(0, 1.12, 0),
+    new THREE.Vector3(2.75, 0, 0),
   ]), []);
   
   const bottomCurve = useMemo(() => new THREE.CatmullRomCurve3([
-    new THREE.Vector3(-2, 0, 0),
-    new THREE.Vector3(0, -0.8, 0),
-    new THREE.Vector3(2, 0, 0),
+    new THREE.Vector3(-2.75, 0, 0),
+    new THREE.Vector3(0, -1.12, 0),
+    new THREE.Vector3(2.75, 0, 0),
   ]), []);
 
   // Event Listeners for Cursor
@@ -86,19 +86,20 @@ function EyeScene() {
 
       {/* Iris Group */}
       <group ref={irisGroupRef}>
+        <pointLight position={[0, 0, 1.5]} color="#4A9BAB" intensity={2.0} />
         {/* Ring */}
         <mesh position={[0, 0, 0]}>
-          <ringGeometry args={[0.55, 0.8, 48]} />
-          <meshStandardMaterial color="#4A9BAB" emissive="#4A9BAB" emissiveIntensity={0.4} side={THREE.DoubleSide} />
+          <ringGeometry args={[0.75, 1.1, 48]} />
+          <meshStandardMaterial color="#4A9BAB" emissive="#4A9BAB" emissiveIntensity={0.8} side={THREE.DoubleSide} />
         </mesh>
         {/* Void */}
         <mesh position={[0, 0, -0.01]}>
-          <circleGeometry args={[0.55, 32]} />
+          <circleGeometry args={[0.75, 32]} />
           <meshBasicMaterial color="#050A0E" side={THREE.DoubleSide} />
         </mesh>
         {/* Center Dot */}
         <mesh position={[0, 0, 0.01]}>
-          <circleGeometry args={[0.18, 24]} />
+          <circleGeometry args={[0.25, 24]} />
           <meshBasicMaterial color="#4A9BAB" side={THREE.DoubleSide} />
         </mesh>
       </group>
@@ -121,8 +122,8 @@ function Particles() {
 
     for (let i = 0; i < numParticles; i++) {
       const angle = (i / numParticles) * Math.PI * 2 + (time * speed);
-      const x = Math.cos(angle) * 1.4;
-      const y = Math.sin(angle) * 0.5;
+      const x = Math.cos(angle) * 1.9;
+      const y = Math.sin(angle) * 0.7;
       
       const mesh = particleRefs.current[i];
       if (mesh) {
@@ -131,7 +132,7 @@ function Particles() {
         // Opacity mapping for particles
         const material = mesh.material as THREE.MeshStandardMaterial;
         if (x < 0) {
-          material.opacity = 0.3 + (Math.abs(x) / 1.4) * 0.7; // fade in on left
+          material.opacity = 0.3 + (Math.abs(x) / 1.9) * 0.7; // fade in on left
           material.transparent = true;
         } else {
           material.opacity = 1.0;
@@ -141,8 +142,8 @@ function Particles() {
 
       // Calculate next particle to draw line segments
       const nextAngle = (((i + 1) % numParticles) / numParticles) * Math.PI * 2 + (time * speed);
-      const nextX = Math.cos(nextAngle) * 1.4;
-      const nextY = Math.sin(nextAngle) * 0.5;
+      const nextX = Math.cos(nextAngle) * 1.9;
+      const nextY = Math.sin(nextAngle) * 0.7;
 
       // Only connect if BOTH particles are on the left side (x < 0)
       if (x < 0 && nextX < 0) {
@@ -169,7 +170,7 @@ function Particles() {
     <group>
       {Array.from({ length: numParticles }).map((_, i) => (
         <mesh key={i} ref={(el) => { if (el) particleRefs.current[i] = el; }}>
-          <sphereGeometry args={[0.025, 12, 12]} />
+          <sphereGeometry args={[0.035, 12, 12]} />
           <meshStandardMaterial color="#4A9BAB" emissive="#4A9BAB" emissiveIntensity={0.8} />
         </mesh>
       ))}
@@ -184,8 +185,11 @@ function Particles() {
 export default function CursorEye() {
   return (
     <div 
-      className="w-[320px] h-[180px] md:w-[500px] md:h-[280px] mx-auto md:mx-0 md:absolute md:right-[5%] md:left-auto md:top-1/2 md:-translate-y-1/2 z-20 pointer-events-none mt-12 md:mt-0"
-      style={{ filter: 'drop-shadow(0 0 30px rgba(74, 155, 171, 0.2))' }}
+      className="w-[320px] h-[180px] md:w-[640px] md:h-[360px] mx-auto md:mx-0 mt-12 md:mt-0 pointer-events-none"
+      style={{ 
+        boxShadow: '0 0 60px rgba(74, 155, 171, 0.15)',
+        filter: 'drop-shadow(0 0 40px rgba(74, 155, 171, 0.3))'
+      }}
     >
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
         <EyeScene />

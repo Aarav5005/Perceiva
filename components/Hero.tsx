@@ -6,8 +6,8 @@ import SideRays from "./SideRays";
 
 export default function Hero() {
   return (
-    <section className="relative w-full h-screen flex flex-col justify-center px-6 md:px-12 bg-[radial-gradient(ellipse_at_center,_var(--color-surface)_0%,_var(--color-background)_100%)] overflow-hidden">
-      <motion.div 
+    <section className="relative w-full h-screen flex flex-col justify-center px-6 md:px-12 bg-[radial-gradient(ellipse_at_center,_var(--color-surface)_0%,_var(--color-background)_100%)] overflow-visible">
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 2, delay: 3.5, ease: "easeOut" }}
@@ -27,10 +27,18 @@ export default function Hero() {
           opacity={1.0}
         />
       </motion.div>
-      
-      {/* Moved CursorEye to appear below text on mobile */}
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 4.5 }}
+        className="md:absolute md:right-[3%] md:top-1/2 md:-translate-y-1/2 z-20"
+      >
+        <CursorEye />
+      </motion.div>
+
       <div className="relative z-10 max-w-4xl pt-20">
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 3.8, ease: "easeOut" }}
@@ -38,8 +46,8 @@ export default function Hero() {
         >
           What if your classroom could think?
         </motion.h1>
-        
-        <motion.p 
+
+        <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 4.0, ease: "easeOut" }}
@@ -47,8 +55,8 @@ export default function Hero() {
         >
           Perceiva reads attention, detects struggle, and understands every student — in real time.
         </motion.p>
-        
-        <motion.div 
+
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 4.2, ease: "easeOut" }}
@@ -60,7 +68,7 @@ export default function Hero() {
           }}>
             Join the early access list ↓
           </button>
-          
+
           <span className="font-mono text-xs md:text-sm text-utility">
             Currently building with founding schools · IIT Jodhpur
           </span>
@@ -68,14 +76,6 @@ export default function Hero() {
       </div>
 
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 4.5 }}
-      >
-        <CursorEye />
-      </motion.div>
-
-      <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 5.0 }}
