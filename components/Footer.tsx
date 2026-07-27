@@ -4,16 +4,19 @@ export default function Footer() {
   return (
     <footer className="w-full bg-background border-t border-midtone pt-16 pb-8 px-6 md:px-12 flex flex-col items-center">
       <div className="max-w-6xl w-full flex flex-col md:flex-row justify-between items-center md:items-start gap-8 mb-16">
-        
+
         {/* Left */}
-        <div className="flex items-center">
-          <Image 
-            src="/logo/perceiva-logo.svg" 
-            alt="Perceiva Logo" 
-            width={240} 
-            height={64} 
-            className="w-auto h-12 md:h-16 object-contain -ml-2"
+        <div className="flex items-center gap-3">
+          <Image
+            src="/logo/perceiva-logo.svg"
+            alt="Perceiva Logo"
+            width={24}
+            height={24}
+            className="w-6 h-6 object-contain"
           />
+          <span className="font-display font-bold text-lg tracking-wide text-textPrimary">
+            Perceiva
+          </span>
         </div>
 
         {/* Center */}

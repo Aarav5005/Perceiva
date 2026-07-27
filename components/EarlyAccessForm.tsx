@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import CurvedInput from "./CurvedInput";
-import { submitToFormspree } from "../lib/formspree";
+import { useForm } from "@formspree/react";
 
 export default function EarlyAccessForm() {
   const [step, setStep] = useState(1);
+  const [state, submitToFormspree] = useForm("xpqvklep");
   const [formData, setFormData] = useState({
     role: "",
     school: "",
@@ -28,6 +29,18 @@ export default function EarlyAccessForm() {
     return () => window.removeEventListener('select-role', handleSelectRole);
   }, []);
 
+  useEffect(() => {
+    if (state.succeeded) {
+      setStep(6);
+    }
+  }, [state.succeeded]);
+
+  useEffect(() => {
+    if (state.errors && state.errors.length > 0) {
+      alert("Something went wrong.");
+    }
+  }, [state.errors]);
+
   const nextStep = () => setStep((s) => Math.min(s + 1, 5));
   
   const handleRoleSelect = (role: string) => {
@@ -44,12 +57,7 @@ export default function EarlyAccessForm() {
     const finalData = { ...formData, email };
     setFormData(finalData);
     
-    const result = await submitToFormspree(finalData);
-    if (result.success) {
-      setStep(6);
-    } else {
-      alert(result.error || "Something went wrong.");
-    }
+    await submitToFormspree(finalData);
   };
 
   // Calculate progress (0 to 100)
@@ -152,7 +160,7 @@ export default function EarlyAccessForm() {
             <h3 className="font-display text-xl md:text-2xl text-pureWhite mb-6 text-center md:text-left">Last one — your email, so we can reach you.</h3>
             <CurvedInput
               placeholder="your@email.com"
-              buttonText="I'm in"
+              buttonText={state.submitting ? "Sending..." : "I'm in"}
               theme="dark"
               bend={0}
               height={56}
