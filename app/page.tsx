@@ -2,7 +2,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import ProblemSection from "@/components/ProblemSection";
-import HorizontalScroll from "@/components/HorizontalScroll";
+import FeatureSteps from "@/components/FeatureSteps";
 import DemoVideo from "@/components/DemoVideo";
 import PersonaCards from "@/components/PersonaCards";
 import PrivacySection from "@/components/PrivacySection";
@@ -16,7 +16,7 @@ export default function Home() {
       <Nav />
       <Hero />
       <ProblemSection />
-      <HorizontalScroll />
+      <FeatureSteps />
       <DemoVideo />
       <PersonaCards />
       <PrivacySection />
