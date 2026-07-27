@@ -36,7 +36,7 @@ export default function EarlyAccessForm() {
   }, [state.succeeded]);
 
   useEffect(() => {
-    if (state.errors && state.errors.length > 0) {
+    if (state.errors) {
       alert("Something went wrong.");
     }
   }, [state.errors]);

@@ -26,7 +26,7 @@ const STATEMENTS = [
       <>
         You{" "}
         <span className="text-accent drop-shadow-[0_0_18px_rgba(74,155,171,0.7)] font-semibold">
-          can't see them
+          can&apos;t see them
         </span>
         .
       </>
@@ -38,7 +38,7 @@ const STATEMENTS = [
       <>
         They{" "}
         <span className="text-accent drop-shadow-[0_0_18px_rgba(74,155,171,0.7)] font-semibold">
-          won't tell you
+          won&apos;t tell you
         </span>
         .
       </>
@@ -48,7 +48,7 @@ const STATEMENTS = [
   {
     html: (
       <>
-        By the time marks fall, it's{" "}
+        By the time marks fall, it&apos;s{" "}
         <span className="text-rose-400 drop-shadow-[0_0_18px_rgba(244,63,94,0.7)] font-semibold">
           already too late
         </span>
@@ -62,7 +62,7 @@ const STATEMENTS = [
       <>
         Perceiva{" "}
         <span className="text-accent drop-shadow-[0_0_25px_rgba(74,155,171,0.8)] font-bold">
-          sees what teachers can't.
+          sees what teachers can&apos;t.
         </span>
       </>
     ),

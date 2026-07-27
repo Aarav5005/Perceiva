@@ -1,14 +1,18 @@
 "use client";
 
+import Image from "next/image";
 import SpecularButton from "./SpecularButton";
 
 export default function Nav() {
   return (
     <nav className="fixed top-0 left-0 w-full z-40 bg-transparent py-6 px-6 md:px-12 flex justify-between items-center">
       <div className="flex items-center overflow-hidden h-12 md:h-14">
-        <img
+        <Image
           src="/logo/perceiva-logo.png"
           alt="Perceiva Logo"
+          width={400}
+          height={200}
+          unoptimized
           className="h-[160px] w-auto object-contain brightness-[2.5] mt-2"
         />
       </div>
