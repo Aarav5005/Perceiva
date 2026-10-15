@@ -9,29 +9,29 @@ export default function PersonaCards() {
     {
       role: "PRINCIPAL",
       code: "01",
-      pain: "You manage outcomes but can't see inside classrooms.",
-      benefit: "Term-long engagement data across every class, every teacher.",
+      pain: "It's difficult to know which explanations are helping students understand a concept.",
+      benefit: "A growing library of visual explanations aligned to what teachers teach.",
       accent: "#4A9BAB",
     },
     {
       role: "TEACHER",
       code: "02",
-      pain: "You can't watch 30 students and teach at the same time.",
-      benefit: "Know who's lost before they give up. While class is happening.",
+      pain: "Some concepts are hard to bring to life on a whiteboard.",
+      benefit: "Ask, show, change, and replay — interactive explanations designed for classroom exploration.",
       accent: "#8B5CF6",
     },
     {
       role: "PARENT",
       code: "03",
-      pain: "You only hear about problems after the test.",
-      benefit: "Understand your child's classroom reality, not just their marks.",
+      pain: "Marks don't always explain what a child understands or finds difficult.",
+      benefit: "A more meaningful view of the concepts a child is exploring, as the product develops.",
       accent: "#F59E0B",
     },
     {
       role: "STUDENT",
       code: "04",
-      pain: "You struggle but no one notices until it's too late.",
-      benefit: "Be seen. Not just graded.",
+      pain: "Abstract ideas can stay abstract.",
+      benefit: "Explore a concept visually, change a variable, and ask “what happens if…?”",
       accent: "#F43F5E",
     },
   ];
@@ -70,7 +70,7 @@ export default function PersonaCards() {
           One system. Every stakeholder.
         </h2>
         <p className="font-body text-base md:text-lg text-textPrimary/60">
-          Perceiva delivers personalized insights to every person who shapes the
+          Perceiva delivers interactive explanations designed for everyone who shapes the
           classroom experience.
         </p>
       </div>
