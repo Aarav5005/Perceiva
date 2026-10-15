@@ -179,7 +179,7 @@ export default function EarlyAccessForm() {
               <h3 className="font-display text-4xl md:text-5xl text-pureWhite font-bold">You&apos;re on the list.</h3>
               <p className="font-body text-textPrimary/80 text-lg">We&apos;ll reach out personally. Not a newsletter.</p>
               <div className="mt-8 pt-8 border-t border-midtone">
-                <span className="font-mono text-xs text-utility">Built by Aarav & Chakrashen · IIT Jodhpur</span>
+                <span className="font-mono text-xs text-utility">Built by Aarav & Chakrashen.</span>
               </div>
             </div>
           </div>
