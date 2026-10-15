@@ -38,6 +38,15 @@ export default function Hero() {
       </motion.div>
 
       <div className="relative z-10 max-w-4xl pt-20">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 3.6, ease: "easeOut" }}
+          className="font-mono text-xs md:text-sm text-accent tracking-[0.25em] uppercase mb-6"
+        >
+          In development · Interactive learning
+        </motion.p>
+
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -53,7 +62,7 @@ export default function Hero() {
           transition={{ duration: 1, delay: 4.0, ease: "easeOut" }}
           className="font-body text-xl md:text-2xl text-textPrimary/80 leading-relaxed max-w-2xl mb-12"
         >
-          Perceiva reads attention, detects struggle, and understands every student — in real time.
+          Perceiva is being developed to turn a teacher&apos;s question into an interactive visual explanation — one students can pause, change, and explore together. The goal is to make abstract concepts easier to investigate, with simulations grounded in scientific models.
         </motion.p>
 
         <motion.div
@@ -70,7 +79,7 @@ export default function Hero() {
           </button>
 
           <span className="font-mono text-xs md:text-sm text-utility">
-            Currently building with founding schools · IIT Jodhpur
+            In development · Seeking early-access educators
           </span>
         </motion.div>
       </div>
