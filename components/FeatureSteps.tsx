@@ -3,9 +3,9 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import Panel1Sees from "./Panel1Sees";
-import Panel2Understands from "./Panel2Understands";
-import Panel3Remembers from "./Panel3Remembers";
+import Panel1Listen from "./Panel1Listen";
+import Panel2Show from "./Panel2Show";
+import Panel3Adapt from "./Panel3Adapt";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -64,13 +64,13 @@ export default function FeatureSteps() {
       <div className="text-center max-w-3xl mb-16 md:mb-24 space-y-4">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-accent/30 bg-surface/30 backdrop-blur-md text-utility text-xs font-mono tracking-widest uppercase shadow-sm">
           <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-          <span>How Perceiva Works</span>
+          <span>How Perceiva Could Teach</span>
         </div>
         <h2 className="font-display font-bold text-3xl md:text-5xl text-pureWhite tracking-tight leading-tight">
-          From raw pixels to real-time intelligence.
+          From a question to a shared exploration.
         </h2>
         <p className="font-body text-base md:text-lg text-textPrimary/75">
-          Three seamless layers operating synchronously in every classroom session.
+          The intended system, described as designed — not yet built.
         </p>
       </div>
 
@@ -82,7 +82,7 @@ export default function FeatureSteps() {
           ref={card1Ref}
           className="sticky top-20 md:top-24 z-10 w-full rounded-3xl border border-accent/25 bg-surface/40 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden"
         >
-          <Panel1Sees />
+          <Panel1Listen />
         </div>
 
         {/* Step 02 */}
@@ -90,7 +90,7 @@ export default function FeatureSteps() {
           ref={card2Ref}
           className="sticky top-24 md:top-28 z-20 w-full rounded-3xl border border-accent/25 bg-surface/40 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden"
         >
-          <Panel2Understands />
+          <Panel2Show />
         </div>
 
         {/* Step 03 */}
@@ -98,7 +98,7 @@ export default function FeatureSteps() {
           ref={card3Ref}
           className="sticky top-28 md:top-32 z-30 w-full rounded-3xl border border-pureWhite/20 bg-surface/40 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden"
         >
-          <Panel3Remembers />
+          <Panel3Adapt />
         </div>
 
       </div>
