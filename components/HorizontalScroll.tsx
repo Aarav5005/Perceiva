@@ -3,9 +3,9 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import Panel1Sees from "./Panel1Sees";
-import Panel2Understands from "./Panel2Understands";
-import Panel3Remembers from "./Panel3Remembers";
+import Panel1Listen from "./Panel1Listen";
+import Panel2Show from "./Panel2Show";
+import Panel3Adapt from "./Panel3Adapt";
 
 // Register ScrollTrigger, making sure it only happens on client side
 if (typeof window !== "undefined") {
@@ -51,13 +51,13 @@ export default function HorizontalScroll() {
         className="flex flex-col md:flex-row w-full md:w-[300vw] h-auto md:h-screen"
       >
         <div className="w-full md:w-[100vw] h-auto md:h-screen flex items-center shrink-0">
-          <Panel1Sees />
+          <Panel1Listen />
         </div>
         <div className="w-full md:w-[100vw] h-auto md:h-screen flex items-center shrink-0">
-          <Panel2Understands />
+          <Panel2Show />
         </div>
         <div className="w-full md:w-[100vw] h-auto md:h-screen flex items-center shrink-0">
-          <Panel3Remembers />
+          <Panel3Adapt />
         </div>
       </div>
     </section>
