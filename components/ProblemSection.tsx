@@ -12,9 +12,9 @@ const STATEMENTS = [
   {
     html: (
       <>
-        Someone in your classroom is{" "}
+        Some concepts are difficult to explain{" "}
         <span className="text-accent drop-shadow-[0_0_18px_rgba(74,155,171,0.7)] font-semibold">
-          struggling right now
+          with words alone
         </span>
         .
       </>
@@ -24,9 +24,9 @@ const STATEMENTS = [
   {
     html: (
       <>
-        You{" "}
+        A diagram on the board{" "}
         <span className="text-accent drop-shadow-[0_0_18px_rgba(74,155,171,0.7)] font-semibold">
-          can&apos;t see them
+          doesn&apos;t move
         </span>
         .
       </>
@@ -36,21 +36,9 @@ const STATEMENTS = [
   {
     html: (
       <>
-        They{" "}
-        <span className="text-accent drop-shadow-[0_0_18px_rgba(74,155,171,0.7)] font-semibold">
-          won&apos;t tell you
-        </span>
-        .
-      </>
-    ),
-    climax: false,
-  },
-  {
-    html: (
-      <>
-        By the time marks fall, it&apos;s{" "}
+        By the time a test reveals confusion, the moment to explore the idea{" "}
         <span className="text-rose-400 drop-shadow-[0_0_18px_rgba(244,63,94,0.7)] font-semibold">
-          already too late
+          may have passed
         </span>
         .
       </>
@@ -60,9 +48,9 @@ const STATEMENTS = [
   {
     html: (
       <>
-        Perceiva{" "}
+        What if the explanation could{" "}
         <span className="text-accent drop-shadow-[0_0_25px_rgba(74,155,171,0.8)] font-bold">
-          sees what teachers can&apos;t.
+          adapt to the question?
         </span>
       </>
     ),
@@ -159,7 +147,7 @@ export default function ProblemSection() {
       <div 
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] rounded-full blur-[140px] pointer-events-none transition-all duration-700"
         style={{
-          backgroundColor: activeIndex === 4 ? "rgba(74, 155, 171, 0.22)" : activeIndex === 3 ? "rgba(244, 63, 94, 0.15)" : "rgba(74, 155, 171, 0.09)"
+          backgroundColor: activeIndex === 3 ? "rgba(74, 155, 171, 0.22)" : activeIndex === 2 ? "rgba(244, 63, 94, 0.15)" : "rgba(74, 155, 171, 0.09)"
         }}
       />
 
@@ -167,10 +155,10 @@ export default function ProblemSection() {
       <div className="z-20 w-full max-w-5xl flex justify-between items-center text-[10px] font-mono text-utility tracking-widest uppercase">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-accent animate-ping" />
-          <span className="text-accent/90">SYS_DIAG // OBSERVER_FEED</span>
+          <span className="text-accent/90">SYS_DIAG // CONCEPT_LAB</span>
         </div>
         <div className="hidden sm:block text-accent/60">
-          SIGNAL: OPTIMAL · 60 FPS
+          SIGNAL: STABLE
         </div>
       </div>
 
