@@ -19,7 +19,7 @@ export default function Footer() {
 
         {/* Center */}
         <div className="text-center flex flex-col gap-2">
-          <p className="font-body text-textPrimary/80">Built by founders at IIT Jodhpur</p>
+          <p className="font-body text-textPrimary/80">Built by Aarav & Chakrashen.</p>
           <a href="mailto:hello@perceiva.in" className="font-body text-accent hover:underline">hello@perceiva.in</a>
         </div>
 
