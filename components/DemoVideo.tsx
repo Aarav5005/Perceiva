@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
@@ -11,6 +11,10 @@ if (typeof window !== "undefined") {
 export default function DemoVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  // The demo video hasn't been recorded yet. Keep the <video> hidden until it
+  // can actually play, so visitors never see a broken-video flash — only the
+  // honest placeholder. Drop the mp4 into public/video/ and it appears on its own.
+  const [videoReady, setVideoReady] = useState(false);
 
   useEffect(() => {
     if (!videoRef.current || !containerRef.current) return;
@@ -59,18 +63,18 @@ export default function DemoVideo() {
           </p>
         </div>
 
-        {/* The Video Element */}
+        {/* The Video Element — hidden until it can play (file not recorded yet) */}
         <video
           ref={videoRef}
           src="/video/perceiva-demo.mp4"
           muted
           playsInline
           loop
+          preload="metadata"
           className="relative z-10 w-full h-full object-cover bg-surface"
-          onError={(e) => {
-            // Hide the video element if it fails to load so the placeholder shows
-            (e.target as HTMLVideoElement).style.display = "none";
-          }}
+          style={{ display: videoReady ? undefined : "none" }}
+          onCanPlay={() => setVideoReady(true)}
+          onError={() => setVideoReady(false)}
         />
 
         {/* Bottom overlay text */}
