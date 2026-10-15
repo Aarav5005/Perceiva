@@ -37,7 +37,7 @@ export default function Hero() {
         <CursorEye />
       </motion.div>
 
-      <div className="relative z-10 max-w-4xl pt-20">
+      <div className="relative z-10 max-w-4xl pt-28 md:pt-20">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -51,7 +51,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 3.8, ease: "easeOut" }}
-          className="font-display font-bold text-5xl md:text-6xl text-pureWhite leading-tight mb-8"
+          className="font-display font-bold text-4xl sm:text-5xl md:text-6xl text-pureWhite leading-[1.15] mb-8"
         >
           What if your classroom could think?
         </motion.h1>
