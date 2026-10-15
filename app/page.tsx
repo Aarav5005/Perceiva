@@ -6,6 +6,7 @@ import Hero from "@/components/Hero";
 const ProblemSection = dynamic(() => import("@/components/ProblemSection"), { ssr: false });
 const FeatureSteps = dynamic(() => import("@/components/FeatureSteps"), { ssr: false });
 const DemoVideo = dynamic(() => import("@/components/DemoVideo"), { ssr: false });
+const ResearchNote = dynamic(() => import("@/components/ResearchNote"), { ssr: false });
 const PersonaCards = dynamic(() => import("@/components/PersonaCards"), { ssr: false });
 const PrivacySection = dynamic(() => import("@/components/PrivacySection"), { ssr: false });
 const EarlyAccessForm = dynamic(() => import("@/components/EarlyAccessForm"), { ssr: false });
@@ -20,6 +21,7 @@ export default function Home() {
       <ProblemSection />
       <FeatureSteps />
       <DemoVideo />
+      <ResearchNote />
       <PersonaCards />
       <PrivacySection />
       <EarlyAccessForm />
